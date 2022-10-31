@@ -30,6 +30,8 @@ int queue_enque(QueueType * queue,QUEUEELEMENT data);
 
 int queue_deque(QueueType * queue,QUEUEELEMENT * resultValue);
 
+int toArray(QueueType * queue,Obstacle ** ob);
+
 #endif
 
 #ifdef QUEUETYPE_IMPLEMENTATION
@@ -76,5 +78,24 @@ int queue_deque(QueueType * queue,QUEUEELEMENT * resultValue){
         *resultValue = queue->data[queue->front];
     queue->front = (queue->front+1)%queue->total;
     return 1;
+}
+
+int toArray(QueueType * queue,Obstacle ** ob){
+    int n = (queue->rear + queue->total - queue->front) % queue->total;
+    int tfront = queue->front; int trear = queue->rear;
+    if(n == 0) {
+        *ob = NULL;
+        return 0;
+    }
+    Obstacle * result = (Obstacle *)malloc(sizeof(Obstacle) * n);
+    int i = 0;
+
+    while(i != n){
+        result[i++] = queue->data[tfront]; 
+        tfront = (tfront + 1) % queue->total;
+
+    }
+    *ob = result;
+    return n; 
 }
 #endif
