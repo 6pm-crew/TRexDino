@@ -19,8 +19,8 @@ Obstacle Obstacle_create(int x_size,int y_size){
         .y_size = y_size,
         .make = obstacle_make,
         .aabb = {
-            .x = x_size * OBSTACLE_IDLE_X_MULT,
-            .y = y_size * OBSTACLE_IDLE_Y_MULT,
+            .x = (float)x_size * OBSTACLE_IDLE_X_MULT,
+            .y = (float)y_size * OBSTACLE_IDLE_Y_MULT,
             .height = OBSTACLE_SIZE_Y,
             .width = OBSTACLE_SIZE_X
         }

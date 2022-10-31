@@ -9,18 +9,21 @@ static float time_ms;
 static int spawn_delay = 30;
 static int type_odd = 2;
 
-void _ObManager_show(ObstacleManager * ob);
-void _update_time(ObstacleManager * ob);
-void _create_obstacle(ObstacleManager * ob);
-void _update_obstacle(ObstacleManager * ob);
+static void ObManager_show(ObstacleManager * ob);
+static void update_time(ObstacleManager * ob);
+static void create_obstacle(ObstacleManager * ob);
+static void update_obstacle(ObstacleManager * ob);
+
 
 ObstacleManager * ObManagerCreate(int x_size,int y_size){
     ObstacleManager * ob = (ObstacleManager *)malloc(sizeof(ObstacleManager));
-    ob->obstacles = create_queue(100);
-    ob->show = _ObManager_show;
+    ob->size.width = x_size;
+    ob->size.height = y_size;
+    ob->obstacles = create_queue(10);
+    ob->show = ObManager_show;
+    ob->closest = obstacleClosest;
     ob->timePass = 0;
-    ob->size.x = x_size;
-    ob->size.y = y_size;
+    ob->moveSpeed = 5.0f;
     return ob;
 }
 
@@ -29,43 +32,59 @@ void Delete_ObManager(ObstacleManager * ob){
     destroy_queue(ob->obstacles);
 }
 
-void _ObManager_show(ObstacleManager * ob){
-    _update_time(ob);
-    _create_obstacle(ob);
-    _update_obstacle(ob);
+static void ObManager_show(ObstacleManager * ob){
+    update_time(ob);
+    create_obstacle(ob);
+    update_obstacle(ob);
 }
 
-void _update_time(ObstacleManager * ob){
-    time_ms += GetFrameTime();
+static void update_time(ObstacleManager * ob){
+    float temp = GetFrameTime();
+    ob->moveSpeed += temp * OBSTACLE_MOVE_SPEED_MUL;
+    TraceLog(LOG_DEBUG,"%f",ob->moveSpeed);
+    time_ms += temp;
     if(time_ms > 0.1) {
         ob->timePass++;
         time_ms = 0;
     }
 }
 
-void _create_obstacle(ObstacleManager * ob){
+static void create_obstacle(ObstacleManager * ob){
 
     if(spawn_delay == 0){
-        spawn_delay = GetRandomValue(5,20) + ob->timePass;
-        
+        spawn_delay = GetRandomValue(3,15) + ob->timePass;
     }
     if(spawn_delay <= ob->timePass){
-        queue_enque(ob->obstacles,Obstacle_create(ob->size.x,ob->size.y));
-        TraceLog(LOG_DEBUG,"%d",spawn_delay);
+        queue_enque(ob->obstacles,Obstacle_create(ob->size.width,ob->size.height));
         spawn_delay = 0;
     }
 
 }
 
-void _update_obstacle(ObstacleManager * ob){
-    int i = ob->obstacles->front;
+static void update_obstacle(ObstacleManager * ob){
+    int n = (ob->obstacles->rear + ob->obstacles->total - ob->obstacles->front) % ob->obstacles->total;
+    int tfront = ob->obstacles->front,trear = ob->obstacles->rear;
+    int i = 0;
+    while(i != n){
+        ob->obstacles->data[tfront].aabb.x -= ob->moveSpeed;
+        DrawRectangleRec(ob->obstacles->data[tfront].aabb, BLUE);
+        i++;
+        tfront = (tfront + 1) % ob->obstacles->total;
 
-    for(i; i < ob->obstacles->rear; i++){
-        ob->obstacles->data[i].aabb.x -= OBSTACLE_MOVE_SPEED;
-        DrawRectangleRec(ob->obstacles->data[i].aabb, BLUE);
     }
-
     if(ob->obstacles->data[ob->obstacles->front].aabb.x < 0){
         queue_deque(ob->obstacles,NULL);
     }
+}
+
+Obstacle obstacleClosest(ObstacleManager * ob,Player * p){
+    Obstacle * arr;
+    int length = toArray(ob->obstacles,&arr);
+    for(int i = 0;i < length;i++){
+        if(arr[i].aabb.x + arr[i].aabb.width > ob->size.width * IDLE_X ){
+            // TraceLog(LOG_DEBUG,"tracking %d",i);
+            return arr[i];
+        }
+    }
+    free(arr);
 }
