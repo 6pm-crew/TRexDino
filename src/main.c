@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "player.h"
-// #include "obstacle_manager.h"
+#include "obstacle_manager.h"
 
 #define TARGET_FPS         60
 
@@ -21,6 +21,7 @@ int main(void) {
     const Rectangle bounds = { .width = SCREEN_WIDTH, .height = SCREEN_HEIGHT };
     const Rectangle ground = {0,0.7f * SCREEN_HEIGHT,SCREEN_WIDTH,0.3f * SCREEN_HEIGHT};
     Player *p = create(SCREEN_WIDTH,SCREEN_HEIGHT);
+    ObstacleManager *ob = ObManagerCreate(SCREEN_WIDTH,SCREEN_HEIGHT);
     // 사용자가 창을 닫거나, `ESC` 키를 누르기 전까지 반복한다.
     while (!WindowShouldClose()) {
         // 게임 화면을 그리기 위해 프레임 버퍼를 초기화한다.
@@ -33,6 +34,7 @@ int main(void) {
         DrawRectangleRec(bounds, BACKGROUND_COLOR);
         // DrawRectangleRec(ground,OBSTABCLE);
         p->show(p);
+        ob->show(ob);
 
         // 게임 화면에 현재 FPS를 표시한다.
         DrawFPS(8, 8);
@@ -44,7 +46,10 @@ int main(void) {
 
     
     // 게임 창에 할당된 메모리를 해제한다.
+    DeletePlayer(p);
+    Delete_ObManager(ob);
     CloseWindow();
+
 
     return 0;
 }
