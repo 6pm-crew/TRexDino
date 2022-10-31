@@ -15,7 +15,7 @@ int main(void) {
     SetTargetFPS(TARGET_FPS);
     SetTraceLogLevel(LOG_DEBUG);
     // 게임 창을 생성한다.
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "6pm-crew/play");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "T-Rex Game");
     
     // 게임 화면의 경계를 나타내는 직사각형을 정의한다.
     const Rectangle bounds = { .width = SCREEN_WIDTH, .height = SCREEN_HEIGHT };
@@ -35,7 +35,7 @@ int main(void) {
         // DrawRectangleRec(ground,OBSTABCLE);
         p->show(p);
         ob->show(ob);
-
+        obstacleClosest(ob,p);
         // 게임 화면에 현재 FPS를 표시한다.
         DrawFPS(8, 8);
 
