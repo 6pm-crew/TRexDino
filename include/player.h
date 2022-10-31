@@ -26,4 +26,5 @@ typedef struct Player{
 
 Player * create(float x_size, float y_size);
 
+void DeletePlayer(Player * p);
 #endif
