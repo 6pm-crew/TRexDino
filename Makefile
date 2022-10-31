@@ -42,6 +42,8 @@ RESOURCE_PATH := res
 INCLUDE_PATH += $(RAYLIB_PATH)/src
 
 SOURCES := $(SOURCE_PATH)/main.c
+SOURCES += $(SOURCE_PATH)/player.c
+SOURCES += $(SOURCE_PATH)/obstacle.c
 OBJECTS := $(SOURCES:.c=.o)
 
 TARGETS := $(BINARY_PATH)/$(PROJECT_NAME)
@@ -66,7 +68,7 @@ endif
 CC := gcc
 CFLAGS := -D_DEFAULT_SOURCE -g $(INCLUDE_PATH:%=-I%) -O2 -std=gnu99
 LDFLAGS := $(LIBRARY_PATH:%=-L%)
-LDLIBS := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+LDLIBS := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -fno-stack-protector
 
 PLATFORM := $(HOST_PLATFORM)
 
@@ -77,7 +79,7 @@ ifeq ($(PLATFORM),WINDOWS)
 		CC := x86_64-w64-mingw32-gcc
 	endif
 
-	LDLIBS := -lraylib -lopengl32 -lgdi32 -lwinmm -lpthread
+	LDLIBS := -lraylib -lopengl32 -lgdi32 -lwinmm -lpthread -fno-stack-protector
 else ifeq ($(PLATFORM),WEB)
 	TARGETS := $(BINARY_PATH)/$(PROJECT_NAME).html
 
