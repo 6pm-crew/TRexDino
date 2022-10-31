@@ -40,10 +40,7 @@ SOURCE_PATH := src
 RESOURCE_PATH := res
 
 INCLUDE_PATH += $(RAYLIB_PATH)/src
-
-SOURCES := $(SOURCE_PATH)/main.c
-SOURCES += $(SOURCE_PATH)/player.c
-SOURCES += $(SOURCE_PATH)/obstacle.c
+SOURCES := $(wildcard $(SOURCE_PATH)/*.c)
 OBJECTS := $(SOURCES:.c=.o)
 
 TARGETS := $(BINARY_PATH)/$(PROJECT_NAME)
