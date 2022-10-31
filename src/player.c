@@ -53,3 +53,7 @@ void player_move(Player *player) {
         player->isJump = false; 
     }
 }
+
+void DeletePlayer(Player * p){
+    free(p);
+}
