@@ -14,7 +14,12 @@ static void update_time(ObstacleManager * ob);
 static void create_obstacle(ObstacleManager * ob);
 static void update_obstacle(ObstacleManager * ob);
 
+const Rectangle catusData[] = {
+    {446,0,34,72}
+};
 
+
+static Texture texture;
 ObstacleManager * ObManagerCreate(int x_size,int y_size){
     ObstacleManager * ob = (ObstacleManager *)malloc(sizeof(ObstacleManager));
     ob->size.width = x_size;
@@ -60,14 +65,19 @@ static void create_obstacle(ObstacleManager * ob){
     }
 
 }
-
+// 선인장 왼쪽 시작 446, 선인장 상단 시작 0
+// 높이 72 너비 34
 static void update_obstacle(ObstacleManager * ob){
     int n = (ob->obstacles->rear + ob->obstacles->total - ob->obstacles->front) % ob->obstacles->total;
     int tfront = ob->obstacles->front,trear = ob->obstacles->rear;
     int i = 0;
     while(i != n){
         ob->obstacles->data[tfront].aabb.x -= ob->moveSpeed;
-        DrawRectangleRec(ob->obstacles->data[tfront].aabb, BLUE);
+        DrawRectangleRec(ob->obstacles->data[tfront].aabb, Fade(BLUE,0.2f));
+        DrawTexturePro(texture,\
+            catusData[0],\
+            ob->obstacles->data[tfront].aabb,\
+            (Vector2){0,0},0,WHITE);
         i++;
         tfront = (tfront + 1) % ob->obstacles->total;
 
@@ -87,4 +97,13 @@ Obstacle obstacleClosest(ObstacleManager * ob,Player * p){
         }
     }
     free(arr);
+}
+
+
+void setObstacleTexture(Texture text){
+    texture = text;
+}
+
+Rectangle getObstacle(){
+    return catusData[0];
 }

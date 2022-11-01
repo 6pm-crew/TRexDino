@@ -31,5 +31,9 @@ void Delete_ObManager(ObstacleManager * ob);
 
 Obstacle obstacleClosest(ObstacleManager * ob,Player * p);
 
+void setObstacleTexture(Texture text);
+
+Rectangle getObstacle();
+
 #endif
 

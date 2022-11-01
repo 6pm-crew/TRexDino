@@ -1,5 +1,6 @@
-#include "obstacle.h"
 #include "raylib.h"
+#include "obstacle_manager.h"
+#include "main.h"
 #include <stdlib.h>
 
 
@@ -12,17 +13,17 @@ double sigmoid(double x) {
 }
 
 
-
+//TODO: 저거 지우자
 Obstacle Obstacle_create(int x_size,int y_size){
     Obstacle p = {
-        .x_size = x_size,
-        .y_size = y_size,
+        .x_size = SCREEN_WIDTH,
+        .y_size = SCREEN_HEIGHT,
         .make = obstacle_make,
         .aabb = {
-            .x = (float)x_size * OBSTACLE_IDLE_X_MULT,
-            .y = (float)y_size * OBSTACLE_IDLE_Y_MULT,
-            .height = OBSTACLE_SIZE_Y,
-            .width = OBSTACLE_SIZE_X
+            .x = SCREEN_WIDTH * OBSTACLE_IDLE_X_MULT,
+            .y = SCREEN_HEIGHT * OBSTACLE_IDLE_Y_MULT - getObstacle().height,
+            .height = getObstacle().height,
+            .width = getObstacle().width
         }
     };
 
