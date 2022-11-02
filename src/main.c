@@ -6,20 +6,22 @@
 #include "main.h"
 
 int main(void) {
-    // 게임의 목표 FPS를 설정한다.
-    SetTargetFPS(TARGET_FPS);
-    SetTraceLogLevel(LOG_DEBUG);
-    // 게임 창을 생성한다.
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "T-Rex Game");
+    SetTargetFPS(TARGET_FPS); // 목표 fps 설정
+    SetTraceLogLevel(LOG_DEBUG); // 디버그 활성화 ( 필요하지 않다면 주석 처리해도 무방)
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "T-Rex Game");// 게임 창을 생성한다.
     
     // 게임 화면의 경계를 나타내는 직사각형을 정의한다.
     const Rectangle bounds = { .width = SCREEN_WIDTH, .height = SCREEN_HEIGHT };
-    const Rectangle ground = {0,0.7f * SCREEN_HEIGHT,SCREEN_WIDTH,0.3f * SCREEN_HEIGHT};
-    Player *p = create(SCREEN_WIDTH,SCREEN_HEIGHT);
-    ObstacleManager *ob = ObManagerCreate(SCREEN_WIDTH,SCREEN_HEIGHT);
+    
+    // 플레이어의 변수를 생성한다.
+    Player *p = PlayerCreate();
+    // 장애물 관리자를 생성한다.
+    ObstacleManager *ob = ObManagerCreate();
 
-
+    // 사용할 스프라이트를 불러온다.
     Texture2D texture = LoadTexture("res/images/offline-sprite-2x.png");
+
+    // 각 생성된 구조체 변수에 텍스쳐를 등록한다.
     setPlayerTexture(texture);
     setObstacleTexture(texture);
 
@@ -34,12 +36,18 @@ int main(void) {
         // 게임 화면에 어두운 회색 색상의 직사각형을 그린다.
         DrawRectangleRec(bounds, BACKGROUND_COLOR);
         drawBackground(texture,ob->moveSpeed);
+
+        // 장애물 관리자 장애물 표시
         ob->show(ob);
+        // 플레이어 표시
         p->show(p);
 
+        // 가장 가까운 장애물 반환
         Obstacle temp = obstacleClosest(ob,p);
 
+        // 충돌시 게임 꺼짐
         // if(CheckCollisionRecs(temp.aabb, p->aabb)) break;
+
 
         // 게임 화면에 현재 FPS를 표시한다.
         DrawFPS(8, 8);
@@ -49,10 +57,15 @@ int main(void) {
         EndDrawing();
     }
 
+
+
+    // 플레이어 동적할당 해제
+    DeletePlayer(p);
+
+    // 장애물 관리자 동적할당 해제
+    Delete_ObManager(ob);
     
     // 게임 창에 할당된 메모리를 해제한다.
-    DeletePlayer(p);
-    Delete_ObManager(ob);
     UnloadTexture(texture);
     CloseWindow();
 

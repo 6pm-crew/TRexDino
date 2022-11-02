@@ -6,22 +6,20 @@
 
 
 #include <math.h>
-int duplicateObstacleCheck(ObstacleManager * ob,int type);
-
-double sigmoid(double x) {
-     double result;
-     result = 1 / (1 + exp(-x));
-     return result;
-}
-
+/**
+ * @brief 화면에 표시되어있는 장애물의 개수가 특정 설정만큼 높지 않은지 확인한다.
+ * 
+ * @param ob 장애물 관리자
+ * @param type 확인하고자 하는 타입 정보
+ * @return int 
+ */
+static int duplicateObstacleCheck(ObstacleManager * ob,int type);
 
 Obstacle Obstacle_create(int index,int type){
     if(type == SMALL_CATUS || type == BIG_CATUS) index += GetRandomValue(0,2);
     ObstacleData * asdf = getObstacle();
 
     Obstacle p = {
-        .x_size = SCREEN_WIDTH,
-        .y_size = SCREEN_HEIGHT,
         .type = type,
         .index = index,
         .aabb = {
@@ -36,10 +34,6 @@ Obstacle Obstacle_create(int index,int type){
 }
 
 
-
-// 새 400 이상 -> 
-// 큰거 3개 200 이상
-// 작 2, 큰 1, 작 1, 작 3 0 이상
 Obstacle obstacle_make(ObstacleManager * ob, int score){
     ObstacleData * obstacleData = getObstacle(); 
     int obstacleTypeIndex = GetRandomValue(0,OBSTACLE_TOTAL_COUNT - 1) * 3;
@@ -53,8 +47,18 @@ Obstacle obstacle_make(ObstacleManager * ob, int score){
     }
 }
 
+Obstacle obstacleClosest(ObstacleManager * ob,Player * p){
+    Obstacle * arr;
+    int length = toArray(ob->obstacles,&arr);
+    for(int i = 0;i < length;i++){
+        if(arr[i].aabb.x + arr[i].aabb.width > SCREEN_WIDTH * IDLE_X ){
+            return arr[5];
+        }
+    }
+    free(arr);
+}
 
-int duplicateObstacleCheck(ObstacleManager * ob,int type){
+static int duplicateObstacleCheck(ObstacleManager * ob,int type){
     Obstacle * obstacleArray;
     int count = 0;
     int length = toArray(ob->obstacles,&obstacleArray);
@@ -65,18 +69,6 @@ int duplicateObstacleCheck(ObstacleManager * ob,int type){
     free(obstacleArray);
     return 0;
 }
-
-Obstacle obstacleClosest(ObstacleManager * ob,Player * p){
-    Obstacle * arr;
-    int length = toArray(ob->obstacles,&arr);
-    for(int i = 0;i < length;i++){
-        if(arr[i].aabb.x + arr[i].aabb.width > ob->size.width * IDLE_X ){
-            return arr[5];
-        }
-    }
-    free(arr);
-}
-
 
 
 // type: "CACTUS_SMALL"

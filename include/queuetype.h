@@ -16,23 +16,64 @@ typedef struct queue_type{
     QUEUEELEMENT * data;
 }QueueType;
 
+/**
+ * @brief 큐를 동적할당으로 생성하는 함수이다.
+ * 
+ * @param n 큐의 크기
+ * @return QueueType* 
+ */
 QueueType * create_queue(int n);
 
+/**
+ * @brief 큐를 동적할당 해제하는 함수이다.
+ * 
+ * @param q 동적할당할 큐
+ */
 void destroy_queue(QueueType * q);
 
+/**
+ * @brief 큐가 다 차있는지 확인하는 함수
+ * 
+ * @param queue 확인할 큐
+ * @return int 
+ */
 int queue_is_full(QueueType * queue);
 
+/**
+ * @brief 큐가 비었는지 확인하는 함수
+ * 
+ * @param queue 확인할 큐
+ * @return int 
+ */
 int queue_is_empty(QueueType * queue);
 
-QueueType * create_AQueue();
-
+/**
+ * @brief 큐에 삽입하는 함수
+ * 
+ * @param queue 변수를 삽입할 큐
+ * @param data 삽입을 할 변수
+ * @return int 삽입 성공 여부
+ */
 int queue_enque(QueueType * queue,QUEUEELEMENT data);
 
+/**
+ * @brief 큐에 삭제하는 함수
+ * 
+ * @param queue 변수를 제거할 큐
+ * @param resultValue 제거하고 반환 받을 포인터 변수
+ * @return int 제거 성공 여부
+ */
 int queue_deque(QueueType * queue,QUEUEELEMENT * resultValue);
 
+/**
+ * @brief 큐를 배열로 변환하는 함수
+ * 
+ * @param queue 변환할 함수
+ * @param ob 동적할당할 포인터 변수의 주소
+ * @return int 배열의 크기
+ */
 int toArray(QueueType * queue,Obstacle ** ob);
 
-int front(QueueType * queue);
 
 #endif
 
@@ -59,12 +100,6 @@ int queue_is_empty(QueueType * queue){
     return queue->front == queue->rear;
 }
 
-QueueType * create_AQueue(){
-    QueueType * result = (QueueType *)malloc(sizeof(QueueType));
-    result->rear = 0;
-    result->front = 0;
-    return result;
-}
 int queue_enque(QueueType * queue,QUEUEELEMENT data){
     if(queue_is_full(queue)){
         return 0;
