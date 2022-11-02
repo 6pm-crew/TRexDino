@@ -1,10 +1,14 @@
+#include <stdlib.h>
+#include "obstacle_type.h"
 #include "obstacle_manager.h"
+#include "obstacle.h"
+
+#include "raylib.h"
+#include "main.h"
 
 #define QUEUETYPE_IMPLEMENTATION
 #include "queuetype.h"
-#include "raylib.h"
-#include "main.h"
-#include <stdlib.h>
+
 
 /** 지나간 ms의 총 크기(0 - 1000ms)*/
 static float time_ms;
