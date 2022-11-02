@@ -9,4 +9,5 @@
 #define BACKGROUND_COLOR   ((Color) { 255, 255, 255, 255 })
 #define OBSTABCLE ((Color) {85, 85, 85, 255})
 
+
 #endif

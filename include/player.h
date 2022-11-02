@@ -13,7 +13,7 @@
 
 #define PLAYER_WIDTH 88.0f
 #define PLAYER_HEIGHT 96.0f
-#define PLAYER_JUMP_SPEED 600
+#define PLAYER_JUMP_SPEED 750
 
 typedef struct Player{
     Rectangle aabb;

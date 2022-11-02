@@ -32,6 +32,8 @@ int queue_deque(QueueType * queue,QUEUEELEMENT * resultValue);
 
 int toArray(QueueType * queue,Obstacle ** ob);
 
+int front(QueueType * queue);
+
 #endif
 
 #ifdef QUEUETYPE_IMPLEMENTATION

@@ -2,6 +2,7 @@
 #include "player.h"
 #include "raylib.h"
 #include "main.h"
+#include "obstacle.h"
 
 #include <stdlib.h>
 void player_move(Player *player);
@@ -27,7 +28,6 @@ Player * create(float x_size, float y_size){
 }
 
 void ApplyGravity(Player *player) {
-    TraceLog(LOG_DEBUG,"%f",player->aabb.y);
     if (player->aabb.y < player->idle_pos.y) //점프 상태
         player->velocity.y += GRAVITY; //중력 가속도 넣어준다.
 
@@ -51,7 +51,7 @@ void DrawPlayer(Player *player) {
         (Vector2){0,0},0,WHITE);
     frameCounter++;
     if(frameCounter > INTERVAL *2) frameCounter = 0;
-    // DrawRectangleRec(player->aabb, Fade(RED,0.25f));
+    DrawRectangleRec(player->aabb, Fade(RED,0.25f));
 }
 
 

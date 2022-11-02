@@ -2,7 +2,7 @@
 
 #define QUEUETYPE_IMPLEMENTATION
 #include "queuetype.h"
-
+#include "raylib.h"
 #include <stdlib.h>
 
 static float time_ms;
@@ -14,9 +14,21 @@ static void update_time(ObstacleManager * ob);
 static void create_obstacle(ObstacleManager * ob);
 static void update_obstacle(ObstacleManager * ob);
 
-const Rectangle catusData[] = {
-    {446,0,34,72}
+
+
+int getGap(ObstacleManager * ob, float speed);
+
+
+const ObstacleData obstacleData[] = {
+    {{446,0,34,72},12,0,SMALL_CATUS},
+    {{480,0,68,72},12,0,SMALL_CATUS},
+    {{548,0,102,72},12,0,SMALL_CATUS},
+    {{652,0,50,102},12,0,BIG_CATUS},
+    {{702,0,100,102},12,0,BIG_CATUS},
+    {{802,0,150,102},12,0,BIG_CATUS},
+    {{260,0,92,82},15,8.5,PTERODACTYL}//352
 };
+
 
 
 static Texture texture;
@@ -26,9 +38,8 @@ ObstacleManager * ObManagerCreate(int x_size,int y_size){
     ob->size.height = y_size;
     ob->obstacles = create_queue(10);
     ob->show = ObManager_show;
-    ob->closest = obstacleClosest;
     ob->timePass = 0;
-    ob->moveSpeed = 5.0f;
+    ob->moveSpeed = OBSTACLE_MOVE_SPEED;
     return ob;
 }
 
@@ -45,8 +56,8 @@ static void ObManager_show(ObstacleManager * ob){
 
 static void update_time(ObstacleManager * ob){
     float temp = GetFrameTime();
-    ob->moveSpeed += temp * OBSTACLE_MOVE_SPEED_MUL;
-    TraceLog(LOG_DEBUG,"%f",ob->moveSpeed);
+    if(ob->moveSpeed < 13)
+        ob->moveSpeed += temp * OBSTACLE_MOVE_SPEED_MUL;
     time_ms += temp;
     if(time_ms > 0.1) {
         ob->timePass++;
@@ -55,12 +66,14 @@ static void update_time(ObstacleManager * ob){
 }
 
 static void create_obstacle(ObstacleManager * ob){
-
+    
     if(spawn_delay == 0){
-        spawn_delay = GetRandomValue(3,15) + ob->timePass;
+        spawn_delay = getGap(ob,ob->moveSpeed) + ob->timePass;
+        printf("%d\n",spawn_delay);
     }
     if(spawn_delay <= ob->timePass){
-        queue_enque(ob->obstacles,Obstacle_create(ob->size.width,ob->size.height));
+        Obstacle temp = obstacle_make(ob,ob->moveSpeed);
+        queue_enque(ob->obstacles,temp);
         spawn_delay = 0;
     }
 
@@ -75,35 +88,36 @@ static void update_obstacle(ObstacleManager * ob){
         ob->obstacles->data[tfront].aabb.x -= ob->moveSpeed;
         DrawRectangleRec(ob->obstacles->data[tfront].aabb, Fade(BLUE,0.2f));
         DrawTexturePro(texture,\
-            catusData[0],\
+            obstacleData[ob->obstacles->data[tfront].index].data,\
             ob->obstacles->data[tfront].aabb,\
             (Vector2){0,0},0,WHITE);
         i++;
         tfront = (tfront + 1) % ob->obstacles->total;
 
     }
-    if(ob->obstacles->data[ob->obstacles->front].aabb.x < 0){
+    if(ob->obstacles->data[ob->obstacles->front].aabb.x + ob->obstacles->data[ob->obstacles->front].aabb.width < 0){
         queue_deque(ob->obstacles,NULL);
     }
 }
 
-Obstacle obstacleClosest(ObstacleManager * ob,Player * p){
-    Obstacle * arr;
-    int length = toArray(ob->obstacles,&arr);
-    for(int i = 0;i < length;i++){
-        if(arr[i].aabb.x + arr[i].aabb.width > ob->size.width * IDLE_X ){
-            // TraceLog(LOG_DEBUG,"tracking %d",i);
-            return arr[i];
-        }
-    }
-    free(arr);
-}
 
+int getGap(ObstacleManager * ob, float speed) {
+    int minGap;
+    if(queue_is_empty(ob->obstacles))
+        minGap = 0;
+    else{
+        Obstacle obstacle = ob->obstacles->data[ob->obstacles->front];
+        minGap = obstacle.aabb.width * 0.03 * speed + getObstacle()[obstacle.index].minGap;
+    }
+    int maxGap = minGap * 0.4;
+    TraceLog(LOG_DEBUG,"minGap : %d, maxGap: %d",minGap,maxGap);
+    return GetRandomValue(maxGap,minGap);
+}
 
 void setObstacleTexture(Texture text){
     texture = text;
 }
 
-Rectangle getObstacle(){
-    return catusData[0];
+ObstacleData * getObstacle(){
+    return obstacleData;
 }

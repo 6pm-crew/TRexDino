@@ -8,7 +8,7 @@
 int main(void) {
     // 게임의 목표 FPS를 설정한다.
     SetTargetFPS(TARGET_FPS);
-    // SetTraceLogLevel(LOG_DEBUG);
+    SetTraceLogLevel(LOG_DEBUG);
     // 게임 창을 생성한다.
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "T-Rex Game");
     
