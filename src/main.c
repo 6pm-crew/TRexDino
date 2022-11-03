@@ -5,9 +5,18 @@
 
 #include "main.h"
 
+/** 게임 종료 변수*/
+bool isGameOver = 0;
+
+/** 게임 디버그 변수*/
+bool game_debug = false;
+
 int main(void) {
     SetTargetFPS(TARGET_FPS); // 목표 fps 설정
-    SetTraceLogLevel(LOG_DEBUG); // 디버그 활성화 ( 필요하지 않다면 주석 처리해도 무방)
+
+    if(game_debug)
+        SetTraceLogLevel(LOG_DEBUG); // 디버그 활성화 
+
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "T-Rex Game");// 게임 창을 생성한다.
     
     // 게임 화면의 경계를 나타내는 직사각형을 정의한다.
@@ -41,12 +50,14 @@ int main(void) {
         ob->show(ob);
         // 플레이어 표시
         p->show(p);
-
         // 가장 가까운 장애물 반환
         Obstacle * temp = obstacleClosest(ob,p);
         // 충돌시 게임 꺼짐
-        if(temp != NULL){
-            // if(CheckCollisionRecs(temp->aabb, p->aabb)) break;
+        if(temp != NULL)
+            if(CheckCollisionRecs(temp->aabb, p->aabb)) isGameOver = true;
+
+        if(isGameOver){
+            gameOverBackround(texture);
         }
 
         // 게임 화면에 현재 FPS를 표시한다.
@@ -67,8 +78,8 @@ int main(void) {
     
     // 게임 창에 할당된 메모리를 해제한다.
     UnloadTexture(texture);
-    CloseWindow();
 
+    CloseWindow();
 
     return 0;
 }
