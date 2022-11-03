@@ -37,11 +37,18 @@ static void update_time(ObstacleManager * ob);
 static void create_obstacle(ObstacleManager * ob);
 
 /**
- * @brief 장애물을 업데이트하여 그려주는 함수 
+ * @brief 장애물을 업데이트해주는 함수 
  * 
  * @param ob 장애물 관리자
  */
 static void update_obstacle(ObstacleManager * ob);
+
+/**
+ * @brief 장애물을 그려주는 함수
+ * 
+ * @param ob 장애물 관리자
+ */
+static void draw_obstacle(ObstacleManager * ob);
 
 /**
  * @brief 속도의 크기와 장애물의 크기에 따라 지연 시간을 반환하는 함수
@@ -69,6 +76,9 @@ const ObstacleData obstacleData[] = {
 /** 텍스쳐 저장 변수*/
 static Texture texture;
 
+
+extern bool isGameOver;
+extern bool game_debug;
 
 ObstacleManager * ObManagerCreate(){
     ObstacleManager * ob = (ObstacleManager *)malloc(sizeof(ObstacleManager));
@@ -109,9 +119,12 @@ ObstacleData * getObstacle(){
 
 
 static void ObManager_show(ObstacleManager * ob){
-    update_time(ob);
-    create_obstacle(ob);
-    update_obstacle(ob);
+    if(!isGameOver){
+        update_time(ob);
+        create_obstacle(ob);
+        update_obstacle(ob);
+    };
+    draw_obstacle(ob);
 }
 
 
@@ -149,17 +162,28 @@ static void update_obstacle(ObstacleManager * ob){
     int i = 0;
     while(i != n){
         ob->obstacles->data[tfront].aabb.x -= ob->moveSpeed;
-        DrawRectangleRec(ob->obstacles->data[tfront].aabb, Fade(BLUE,0.2f));
+        i++;
+        tfront = (tfront + 1) % ob->obstacles->total;
+    }
+    if(ob->obstacles->data[ob->obstacles->front].aabb.x + ob->obstacles->data[ob->obstacles->front].aabb.width < 0){
+        queue_deque(ob->obstacles,NULL);
+    }
+}
+
+static void draw_obstacle(ObstacleManager * ob){
+    int n = (ob->obstacles->rear + ob->obstacles->total - ob->obstacles->front) % ob->obstacles->total;
+    int tfront = ob->obstacles->front,trear = ob->obstacles->rear;
+    int i = 0;
+    while(i != n){
         DrawTexturePro(texture,\
             obstacleData[ob->obstacles->data[tfront].index].data,\
             ob->obstacles->data[tfront].aabb,\
             (Vector2){0,0},0,WHITE);
+        if(game_debug)
+            DrawRectangleRec(ob->obstacles->data[tfront].aabb, Fade(BLUE,0.2f));
         i++;
         tfront = (tfront + 1) % ob->obstacles->total;
 
-    }
-    if(ob->obstacles->data[ob->obstacles->front].aabb.x + ob->obstacles->data[ob->obstacles->front].aabb.width < 0){
-        queue_deque(ob->obstacles,NULL);
     }
 }
 

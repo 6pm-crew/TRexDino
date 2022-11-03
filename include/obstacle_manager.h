@@ -9,7 +9,7 @@
 
 
 /** 장애물 이동 속도*/ //기본 6
-#define OBSTACLE_MOVE_SPEED 13
+#define OBSTACLE_MOVE_SPEED 6
 /** 장애물 이동 계수*/
 #define OBSTACLE_MOVE_SPEED_MUL 0.1
 
