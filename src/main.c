@@ -43,11 +43,11 @@ int main(void) {
         p->show(p);
 
         // 가장 가까운 장애물 반환
-        Obstacle temp = obstacleClosest(ob,p);
-
+        Obstacle * temp = obstacleClosest(ob,p);
         // 충돌시 게임 꺼짐
-        // if(CheckCollisionRecs(temp.aabb, p->aabb)) break;
-
+        if(temp != NULL){
+            // if(CheckCollisionRecs(temp->aabb, p->aabb)) break;
+        }
 
         // 게임 화면에 현재 FPS를 표시한다.
         DrawFPS(8, 8);
