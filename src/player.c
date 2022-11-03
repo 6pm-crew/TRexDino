@@ -33,15 +33,10 @@ static Texture texture;
 /** 플레이어 애니메이션에 사용할 변수*/
 const int INTERVAL = TARGET_FPS / 8;
 
-const Rectangle textureAABBData[] = {
-    {
-        .y = 0,.width = 88,.height = 96
-    },
-    {
-        .y = 40,.width = 118,.height = 56
-    }
-};
-
+/**
+ * @brief 플레이어의 스트라이트 위치
+ * 
+ */
 const Rectangle textruePlayerData[][2] = {
     {
         {.x = 1514,.y = 0,.width = 88,.height = 96},
@@ -63,7 +58,7 @@ enum PlayerDisplayType {
     PLAYER_DEAD
 };
 
-extern bool isReload;
+extern bool isGameOver;
 extern bool game_debug;
 
 Player * PlayerCreate(){
@@ -94,7 +89,7 @@ static void DrawPlayer(Player *player) {
 
     static int frameCounter;
     int playerDisplayType = PLAYER_DEAD;
-    if(!isReload){
+    if(!isGameOver){
         ApplyGravity(player);
         player_move(player);
         if(!player->isLaydown){
@@ -132,13 +127,11 @@ static void ApplyGravity(Player *player) {
 
     player->aabb.y += player->velocity.y * deltaTime; //넓이 값 구한다.
 
-    printf("%f\n",player->aabb.y);
 }
 
 
 static void player_move(Player *player) {
-    //
-    if (player->aabb.y >= player->idle_pos.y + player->isLaydown * 40) {
+    if (player->aabb.y >= player->idle_pos.y + player->isLaydown * (PLAYER_HEIGHT - PLAYER_HEIGHT_LAY)) {
         player->aabb.y = player->idle_pos.y;
         player->isJump = false; 
         player->velocity.y = 0;
@@ -152,6 +145,6 @@ static void player_move(Player *player) {
 
     if (IsKeyDown(KEY_DOWN) && !player->isLaydown){
         player->isLaydown = true;
-        player->aabb.y += (PLAYER_HEIGHT - PLAYER_HEIGHT_LAY);
+        player->aabb.y += (PLAYER_HEIGHT - PLAYER_HEIGHT_LAY); //엎드렸을 경우 위치 조정값
     }
 }
