@@ -8,8 +8,8 @@
 /** 큐 데이터 타입 Obstacle로 설정*/
 
 
-/** 장애물 이동 속도*/
-#define OBSTACLE_MOVE_SPEED 6
+/** 장애물 이동 속도*/ //기본 6
+#define OBSTACLE_MOVE_SPEED 13
 /** 장애물 이동 계수*/
 #define OBSTACLE_MOVE_SPEED_MUL 0.1
 
@@ -41,9 +41,9 @@ void Delete_ObManager(ObstacleManager * ob);
  * 
  * @param ob 장애물 관리자
  * @param p 기준으로 삼을 플레이어 변수
- * @return Obstacle 가장 가까운 장애물
+ * @return Obstacle* 가장 가까운 장애물
  */
-Obstacle obstacleClosest(ObstacleManager * ob,Player * p);
+Obstacle * obstacleClosest(ObstacleManager * ob,Player * p);
 
 /**
  * @brief 장애물의 텍스쳐를 설정해준다.

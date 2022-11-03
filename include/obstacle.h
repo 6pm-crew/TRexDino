@@ -20,12 +20,5 @@ Obstacle Obstacle_create();
 Obstacle obstacle_make(ObstacleManager * ob, int score);
 
 
-/**
- * @brief 가장 가까운 장애물을 반환해주는 함수
- * 
- * @param ob 장애물 관리자
- * @param p 기준으로 삼을 플레이어 변수
- * @return Obstacle 가장 가까운 장애물
- */
-Obstacle obstacleClosest(ObstacleManager * ob,Player * p);
+
 #endif

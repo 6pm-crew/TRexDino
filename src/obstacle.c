@@ -6,6 +6,14 @@
 
 
 #include <math.h>
+
+const int obstacleHeightData[] = {
+    0,//ground
+    56,//middle
+    100//height
+};
+
+
 /**
  * @brief 화면에 표시되어있는 장애물의 개수가 특정 설정만큼 높지 않은지 확인한다.
  * 
@@ -16,15 +24,17 @@
 static int duplicateObstacleCheck(ObstacleManager * ob,int type);
 
 Obstacle Obstacle_create(int index,int type){
+    int height_pos = 0;
     if(type == SMALL_CATUS || type == BIG_CATUS) index += GetRandomValue(0,2);
+    if(type == PTERODACTYL) height_pos = GetRandomValue(0,2); 
     ObstacleData * asdf = getObstacle();
-
+    
     Obstacle p = {
         .type = type,
         .index = index,
         .aabb = {
             .x = SCREEN_WIDTH * OBSTACLE_IDLE_X_MULT,
-            .y = SCREEN_HEIGHT * OBSTACLE_IDLE_Y_MULT - getObstacle()[index].data.height,
+            .y = SCREEN_HEIGHT * OBSTACLE_IDLE_Y_MULT - getObstacle()[index].data.height - obstacleHeightData[height_pos],
             .height = getObstacle()[index].data.height,
             .width = getObstacle()[index].data.width
         }
@@ -45,17 +55,6 @@ Obstacle obstacle_make(ObstacleManager * ob, int score){
     else{
         return Obstacle_create(obstacleTypeIndex,obsatcleRef.type);
     }
-}
-
-Obstacle obstacleClosest(ObstacleManager * ob,Player * p){
-    Obstacle * arr;
-    int length = toArray(ob->obstacles,&arr);
-    for(int i = 0;i < length;i++){
-        if(arr[i].aabb.x + arr[i].aabb.width > SCREEN_WIDTH * IDLE_X ){
-            return arr[5];
-        }
-    }
-    free(arr);
 }
 
 static int duplicateObstacleCheck(ObstacleManager * ob,int type){

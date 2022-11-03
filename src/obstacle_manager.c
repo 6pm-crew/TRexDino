@@ -65,6 +65,7 @@ const ObstacleData obstacleData[] = {
     {{802,0,150,102},12,0,BIG_CATUS},
     {{260,0,92,82},15,8.5,PTERODACTYL}//352
 };
+
 /** 텍스쳐 저장 변수*/
 static Texture texture;
 
@@ -160,4 +161,19 @@ static void update_obstacle(ObstacleManager * ob){
     if(ob->obstacles->data[ob->obstacles->front].aabb.x + ob->obstacles->data[ob->obstacles->front].aabb.width < 0){
         queue_deque(ob->obstacles,NULL);
     }
+}
+
+Obstacle * obstacleClosest(ObstacleManager * ob,Player * p){
+    Obstacle * arr;
+    int length = toArray(ob->obstacles,&arr);
+    printf("%d\n",length);
+    if(arr == NULL) return NULL;
+    for(int i = 0;i < length;i++){
+        if(arr[i].aabb.x + arr[i].aabb.width > SCREEN_WIDTH * IDLE_X ){
+            free(arr);
+            return &(ob->obstacles->data[i + ob->obstacles->front]);
+        }
+    }
+    free(arr);
+
 }
