@@ -10,4 +10,10 @@
  */
 void drawBackground(Texture2D texture,float speed);
 
+/**
+ * @brief 게임이 종료될 경우 사용하는 함수
+ * 
+ * @param texture 사용할 이미지 
+ */
+void gameOverBackround(Texture2D texture);
 #endif
