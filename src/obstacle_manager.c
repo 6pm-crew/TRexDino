@@ -166,7 +166,6 @@ static void update_obstacle(ObstacleManager * ob){
 Obstacle * obstacleClosest(ObstacleManager * ob,Player * p){
     Obstacle * arr;
     int length = toArray(ob->obstacles,&arr);
-    printf("%d\n",length);
     if(arr == NULL) return NULL;
     for(int i = 0;i < length;i++){
         if(arr[i].aabb.x + arr[i].aabb.width > SCREEN_WIDTH * IDLE_X ){

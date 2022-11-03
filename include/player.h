@@ -10,7 +10,7 @@
 #define FALL_SHORT_MULT 1.55f
 
 /** 플레이어 점프 속도 관련 상수*/
-#define PLAYER_JUMP_SPEED 750
+#define PLAYER_JUMP_SPEED 1500
 
 /** 플레이어 기존 위치 비율*/
 #define IDLE_X 0.1f
@@ -19,6 +19,9 @@
 /** 플레이어 크기 설정 상수 */
 #define PLAYER_WIDTH 88.0f
 #define PLAYER_HEIGHT 96.0f
+
+#define PLAYER_WIDTH_LAY 118
+#define PLAYER_HEIGHT_LAY 56
 
 
 /**
@@ -34,7 +37,8 @@ typedef struct Player{
     Vector2 velocity;
     /** 플레이어의 점프 여부*/
     bool isJump;
-
+    /** 플레이어가 누워있는지에 대한 여부*/
+    bool isLaydown;
     /** 플레이어 이동 포인터 함수*/
     void (*move)(struct Player * p);
     /** 플레이어 표시 포인터 함수*/
