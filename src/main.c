@@ -2,106 +2,83 @@
 #include "player.h"
 #include "obstacle_manager.h"
 #include "texture_manager.h"
-
 #include "main.h"
 
-/** 게임 종료 변수*/
-bool isGameOver = 0;
-
-/** 게임 디버그 변수*/
-bool game_debug = true;
-
-bool isOkayToStart = false;
-
-bool takeout = false;
-int tmeptmep = 0;
+/** boolean type flag */
+bool isGameOver     = false;                                                // 게임 오버 플래그
+bool game_debug     = false;                                                // 게임 디버그 온/오프
+bool isReady        = false;                                                // 게임 시작 준비 플래그
+bool isStart        = false;                                                // 게임 재시작 플래그
 
 int main(void) {
 
-    SetTargetFPS(TARGET_FPS);   // 목표 fps 설정
-
-    if(game_debug)
-        SetTraceLogLevel(LOG_DEBUG); // 디버그 활성화 
-
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "T-Rex Game");// 게임 창을 생성한다.
-    SetExitKey(KEY_NULL);       // ESC 종료 방지
+    /** default start option */
+    SetTargetFPS(TARGET_FPS);                                               // fps 설정
+    if(game_debug) 
+        SetTraceLogLevel(LOG_DEBUG);                                        // 디버그 출력
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "T-Rex Game");                  // 화면 생성
+    SetExitKey(KEY_NULL);                                                   // ESC 종료 방지
     
-    // 게임 화면의 경계를 나타내는 직사각형을 정의한다.
+    /** window border of rectangle type */
     const Rectangle bounds = { .width = SCREEN_WIDTH, .height = SCREEN_HEIGHT };
     
-    // 플레이어의 변수를 생성한다.
-    Player *p = createPlayer();
-    // 장애물 관리자를 생성한다.
-    ObstacleManager *ob = ObManagerCreate();
+    /** game entity option */
+    Player          *p  = createPlayer();                                   // T-Rex 생성
+    ObstacleManager *ob = ObManagerCreate();                                // 장애물 관리자 생성
 
-    // 사용할 스프라이트를 불러온다.
-    Texture2D texture = LoadTexture("res/images/offline-sprite-2x.png");
+    /** texture option */
+    Texture2D  texture  = LoadTexture("res/images/offline-sprite-2x.png");  // 리소스 불러오기
+    setPlayerTexture(texture);                                              // 플레이어 텍스쳐 설정
+    setObstacleTexture(texture);                                            // 장애물 텍스쳐 설정
 
-    // 각 생성된 구조체 변수에 텍스쳐를 등록한다.
-    setPlayerTexture(texture);
-    setObstacleTexture(texture);
+    while (!WindowShouldClose()) {                                          // 사용자가 창을 닫을 때 까지 반복
 
-    // 사용자가 창을 닫거나, `ESC` 키를 누르기 전까지 반복한다.
-    while (!WindowShouldClose()) {
-        // 게임 화면을 그리기 위해 프레임 버퍼를 초기화한다.
-        BeginDrawing();
+        /** frame buffer option */
+        BeginDrawing();                                                     // 프레임 버퍼 초기화
+        ClearBackground(BLACK);                                             // 프레임 버퍼 색상
+
+        /** game background option */
+        DrawRectangleRec(bounds, BACKGROUND_COLOR);                         // 화면에 짙은 회색 직사각형 그리기
+        drawBackground(texture,ob->moveSpeed);                              // 지면 텍스쳐 그리기
+
+        /** game entity option */
+        ob->show(ob);                                                       // 장애물 출력
+        p->show(p);                                                         // 플레이어 출력
         
-        // 프레임 버퍼를 검은색으로 채운다.
-        ClearBackground(BLACK);
+        /** game event option */
+        Obstacle * temp = obstacleClosest(ob,p);                            // 가장 가까운 장애물 반환
+        if(temp != NULL)                                                    // 장애물과 충돌 시 게임오버
+            if(CheckCollisionRecs(temp->aabb, p->aabb))
+                isGameOver = true;
 
-        // 게임 화면에 어두운 회색 색상의 직사각형을 그린다.
-        DrawRectangleRec(bounds, BACKGROUND_COLOR);
-        drawBackground(texture,ob->moveSpeed);
-
-        // 장애물 관리자 장애물 표시
-        ob->show(ob);
-        // 플레이어 표시
-        p->show(p);
-        // 가장 가까운 장애물 반환
-        Obstacle * temp = obstacleClosest(ob,p);
-        // 충돌시 게임 꺼짐
-        if(temp != NULL)
-            if(CheckCollisionRecs(temp->aabb, p->aabb)) isGameOver = true;
-
-        if(isGameOver){
+        /** game play option */
+        if(isGameOver){                                                     // 게임 오버 및 재시작
             gameOverBackround(texture);
-            
-            if(takeout && (IsKeyReleased(KEY_R) || IsKeyReleased(KEY_SPACE) || IsKeyReleased(KEY_UP))) {
-                tmeptmep = 1;
-                resetObManager(ob);
+
+            if(isStart && (IsKeyReleased(KEY_R) || IsKeyReleased(KEY_SPACE) || IsKeyReleased(KEY_UP))) {
+                resetObManager(ob);                                         // 엔티티 및 플래그 초기화
                 resetPlayer(p);
                 isGameOver = false;
-                isOkayToStart = false;
-                takeout = false;
-            }            
-            else if(isOkayToStart && (IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE) || IsKeyReleased(KEY_UP))) {
-                takeout = true;
-            }
-            else if(!(IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE) || IsKeyReleased(KEY_UP))) {
-                isOkayToStart = true;
-            }
+                isReady    = false;
+                isStart    = false;
+            }        
 
+            else if(isReady && (IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE) || IsKeyReleased(KEY_UP))) 
+                isStart = true;                                             // 게임 재시작
 
+            else if(!(IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE) || IsKeyReleased(KEY_UP))) 
+                isReady = true;                                             // 게임 시작 준비
         }
-
-        // 게임 화면에 현재 FPS를 표시한다.
-        DrawFPS(8, 8);
-
-        // 더블 버퍼링 기법을 사용하여 게임 화면을 그리고,
-        // 다음 프레임 버퍼를 준비한다.
-        EndDrawing();
+        DrawFPS(8, 8);                                                      // x, y 위치에 fps 출력
+        EndDrawing();                                                       // 다음 프레임 버퍼 준비(더블 버퍼링 기법)
     }
 
-    // 플레이어 동적할당 해제
-    DeletePlayer(p);
+    /** release memory */
+    DeletePlayer(p);                                                        // T-Rex 동적할당 해제
+    Delete_ObManager(ob);                                                   // 장애물 관리자 동적할당 해제
+    UnloadTexture(texture);                                                 // 리소스 메모리 동적할당 해제
 
-    // 장애물 관리자 동적할당 해제
-    Delete_ObManager(ob);
-    
-    // 게임 창에 할당된 메모리를 해제한다.
-    UnloadTexture(texture);
-
-    CloseWindow();
+    CloseWindow();                                                          // 화면 출력 종료
 
     return 0;
 }

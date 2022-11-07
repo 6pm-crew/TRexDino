@@ -64,13 +64,13 @@ int getGap(ObstacleManager * ob, float speed);
  * 
  */
 const ObstacleData obstacleData[] = {
-    {{446,0,34,72},6,0,SMALL_CATUS},
-    {{480,0,68,72},6,0,SMALL_CATUS},
-    {{548,0,102,72},6,0,SMALL_CATUS},
-    {{652,0,50,102},6,0,BIG_CATUS},
-    {{702,0,100,102},6,0,BIG_CATUS},
-    {{802,0,150,102},6,0,BIG_CATUS},
-    {{260,0,92,82},8,8.5,PTERODACTYL}//352
+    {{446,0,34,72},12,0,SMALL_CATUS},
+    {{480,0,68,72},12,0,SMALL_CATUS},
+    {{548,0,102,72},12,0,SMALL_CATUS},
+    {{652,0,50,102},12,0,BIG_CATUS},
+    {{702,0,100,102},12,0,BIG_CATUS},
+    {{802,0,150,102},12,0,BIG_CATUS},
+    {{260,0,92,82},15,8.5,PTERODACTYL}//352
 };
 
 /** 텍스쳐 저장 변수*/
@@ -102,16 +102,16 @@ void Delete_ObManager(ObstacleManager * ob){
 }
 
 int getGap(ObstacleManager * ob, float speed) {
-    int maxGap;
+    int minGap;
     if(queue_is_empty(ob->obstacles))
-        maxGap = 0;
+        minGap = 0;
     else{
         Obstacle obstacle = ob->obstacles->data[ob->obstacles->front];
-        maxGap = obstacle.aabb.width * 0.015 + speed * getObstacle()[obstacle.index].minGap * 0.25;
+        minGap = obstacle.aabb.width * 0.03 * speed + getObstacle()[obstacle.index].minGap;
     }
-    int minGap = maxGap * 0.7;
+    int maxGap = minGap * 0.4;
     TraceLog(LOG_DEBUG,"minGap : %d, maxGap: %d",minGap,maxGap);
-    return GetRandomValue(minGap,maxGap);
+    return GetRandomValue(maxGap,minGap);
 }
 
 void setObstacleTexture(Texture text){
