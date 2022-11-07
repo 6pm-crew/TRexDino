@@ -61,7 +61,7 @@ enum PlayerDisplayType {
 extern bool isGameOver;
 extern bool game_debug;
 
-Player * PlayerCreate(){
+Player * createPlayer(){
     Player * p = (Player*)malloc(sizeof(Player));
     p->isJump = false;
     p->isLaydown = false;
@@ -74,6 +74,17 @@ Player * PlayerCreate(){
 
     p->show = DrawPlayer;
     return p;
+}
+
+void resetPlayer(Player *p) {
+    p->isJump = false;
+    p->isLaydown = false;
+    p->aabb.x = IDLE_X * SCREEN_WIDTH;
+    p->aabb.width = PLAYER_WIDTH;
+    p->aabb.height = PLAYER_HEIGHT;
+
+    p->aabb.y = SCREEN_HEIGHT * IDLE_Y  - PLAYER_HEIGHT;
+    p->idle_pos.y = p->aabb.y;
 }
 
 void setPlayerTexture(Texture text){

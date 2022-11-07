@@ -23,7 +23,7 @@ int main(void) {
     const Rectangle bounds = { .width = SCREEN_WIDTH, .height = SCREEN_HEIGHT };
     
     // 플레이어의 변수를 생성한다.
-    Player *p = PlayerCreate();
+    Player *p = createPlayer();
     // 장애물 관리자를 생성한다.
     ObstacleManager *ob = ObManagerCreate();
 

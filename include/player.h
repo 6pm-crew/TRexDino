@@ -50,7 +50,7 @@ typedef struct Player{
  * 
  * @return Player* 
  */
-Player * PlayerCreate();
+Player * createPlayer();
 
 /**
  * @brief 플레이어를 동적할당 해제한다.

@@ -89,6 +89,14 @@ ObstacleManager * ObManagerCreate(){
     return ob;
 }
 
+void resetObManager(ObstacleManager *ob) {
+    while(!queue_is_empty(ob->obstacles)) {
+        queue_deque(ob->obstacles, NULL);
+        ob->timePass = 0;
+        ob->moveSpeed = OBSTACLE_MOVE_SPEED;
+    }
+}
+
 void Delete_ObManager(ObstacleManager * ob){
     free(ob);
     destroy_queue(ob->obstacles);
