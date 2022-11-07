@@ -11,13 +11,16 @@ bool isGameOver = 0;
 /** 게임 디버그 변수*/
 bool game_debug = false;
 
+
 int main(void) {
-    SetTargetFPS(TARGET_FPS); // 목표 fps 설정
+
+    SetTargetFPS(TARGET_FPS);   // 목표 fps 설정
 
     if(game_debug)
         SetTraceLogLevel(LOG_DEBUG); // 디버그 활성화 
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "T-Rex Game");// 게임 창을 생성한다.
+    SetExitKey(KEY_NULL);       // ESC 종료 방지
     
     // 게임 화면의 경계를 나타내는 직사각형을 정의한다.
     const Rectangle bounds = { .width = SCREEN_WIDTH, .height = SCREEN_HEIGHT };
@@ -58,6 +61,11 @@ int main(void) {
 
         if(isGameOver){
             gameOverBackround(texture);
+            if(IsKeyReleased(KEY_R) || IsKeyReleased(KEY_SPACE)) {
+                resetObManager(ob);
+                resetPlayer(p);
+                isGameOver=false;
+            }
         }
 
         // 게임 화면에 현재 FPS를 표시한다.
@@ -67,8 +75,6 @@ int main(void) {
         // 다음 프레임 버퍼를 준비한다.
         EndDrawing();
     }
-
-
 
     // 플레이어 동적할당 해제
     DeletePlayer(p);

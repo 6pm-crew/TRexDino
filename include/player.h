@@ -53,6 +53,13 @@ typedef struct Player{
 Player * createPlayer();
 
 /**
+ * @brief 플레이어를 초기화.
+ * 
+ * @return Player* 
+ */
+void resetPlayer(Player *p);
+
+/**
  * @brief 플레이어를 동적할당 해제한다.
  * 
  * @param p 

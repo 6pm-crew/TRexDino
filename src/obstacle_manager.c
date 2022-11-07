@@ -13,7 +13,7 @@
 /** 지나간 ms의 총 크기(0 - 1000ms)*/
 static float time_ms;
 /** 장애물 생성 지연 시간*/
-static int spawn_delay = 30;
+static int spawn_delay = OBSTACLE_INIT_SPAWN_DELAY;
 
 /**
  * @brief 장애물 관리자 화면에 표시
@@ -90,11 +90,10 @@ ObstacleManager * ObManagerCreate(){
 }
 
 void resetObManager(ObstacleManager *ob) {
-    while(!queue_is_empty(ob->obstacles)) {
-        queue_deque(ob->obstacles, NULL);
-        ob->timePass = 0;
-        ob->moveSpeed = OBSTACLE_MOVE_SPEED;
-    }
+    while(queue_deque(ob->obstacles, NULL));
+    spawn_delay = OBSTACLE_INIT_SPAWN_DELAY;
+    ob->timePass = 0;
+    ob->moveSpeed = OBSTACLE_MOVE_SPEED;
 }
 
 void Delete_ObManager(ObstacleManager * ob){
