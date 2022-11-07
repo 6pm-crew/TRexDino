@@ -9,7 +9,7 @@
 bool isGameOver = 0;
 
 /** 게임 디버그 변수*/
-bool game_debug = false;
+bool game_debug = true;
 
 bool isOkayToStart = false;
 
@@ -66,7 +66,7 @@ int main(void) {
         if(isGameOver){
             gameOverBackround(texture);
             
-            if(takeout && (IsKeyReleased(KEY_R) || IsKeyReleased(KEY_SPACE))) {
+            if(takeout && (IsKeyReleased(KEY_R) || IsKeyReleased(KEY_SPACE) || IsKeyReleased(KEY_UP))) {
                 tmeptmep = 1;
                 resetObManager(ob);
                 resetPlayer(p);
@@ -74,14 +74,13 @@ int main(void) {
                 isOkayToStart = false;
                 takeout = false;
             }            
-            else if(isOkayToStart && (IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE))) {
+            else if(isOkayToStart && (IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE) || IsKeyReleased(KEY_UP))) {
                 takeout = true;
             }
-            else if(!(IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE))) {
+            else if(!(IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE) || IsKeyReleased(KEY_UP))) {
                 isOkayToStart = true;
             }
 
-            printf("%d\n",tmeptmep);
 
         }
 
