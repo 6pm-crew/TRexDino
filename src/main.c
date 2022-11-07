@@ -11,6 +11,9 @@ bool isGameOver = 0;
 /** 게임 디버그 변수*/
 bool game_debug = false;
 
+bool isOkayToStart = false;
+
+bool takeout = false;
 
 int main(void) {
 
@@ -61,11 +64,20 @@ int main(void) {
 
         if(isGameOver){
             gameOverBackround(texture);
-            if(IsKeyReleased(KEY_R) || IsKeyReleased(KEY_SPACE)) {
+            if(takeout && (IsKeyReleased(KEY_R) || IsKeyReleased(KEY_SPACE))) {
                 resetObManager(ob);
                 resetPlayer(p);
-                isGameOver=false;
+                isGameOver = false;
+                isOkayToStart = false;
+                takeout = false;
+            }            
+            if(isOkayToStart && (IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE))) {
+                takeout = true;
             }
+            if(!IsKeyDown(KEY_R) && !IsKeyDown(KEY_SPACE)) {
+                isOkayToStart = true;
+            }
+
         }
 
         // 게임 화면에 현재 FPS를 표시한다.
