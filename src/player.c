@@ -100,6 +100,8 @@ static void DrawPlayer(Player *player) {
 
     static int frameCounter;
     int playerDisplayType = PLAYER_DEAD;
+    player->aabb.width = PLAYER_WIDTH;
+    player->aabb.height = PLAYER_HEIGHT;
     if(!isGameOver){
         ApplyGravity(player);
         player_move(player);
@@ -113,7 +115,8 @@ static void DrawPlayer(Player *player) {
             player->aabb.height = PLAYER_HEIGHT_LAY;
             playerDisplayType = PLAYER_ALIVE_LAY;
         }
-    };
+    }
+
 
     DrawTexturePro(texture,\
         textruePlayerData[playerDisplayType][frameCounter > INTERVAL],\
