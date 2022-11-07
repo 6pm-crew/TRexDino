@@ -14,6 +14,7 @@ bool game_debug = false;
 bool isOkayToStart = false;
 
 bool takeout = false;
+int tmeptmep = 0;
 
 int main(void) {
 
@@ -64,19 +65,23 @@ int main(void) {
 
         if(isGameOver){
             gameOverBackround(texture);
+            
             if(takeout && (IsKeyReleased(KEY_R) || IsKeyReleased(KEY_SPACE))) {
+                tmeptmep = 1;
                 resetObManager(ob);
                 resetPlayer(p);
                 isGameOver = false;
                 isOkayToStart = false;
                 takeout = false;
             }            
-            if(isOkayToStart && (IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE))) {
+            else if(isOkayToStart && (IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE))) {
                 takeout = true;
             }
-            if(!IsKeyDown(KEY_R) && !IsKeyDown(KEY_SPACE)) {
+            else if(!(IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE))) {
                 isOkayToStart = true;
             }
+
+            printf("%d\n",tmeptmep);
 
         }
 

@@ -82,7 +82,7 @@ void resetPlayer(Player *p) {
     p->aabb.x = IDLE_X * SCREEN_WIDTH;
     p->aabb.width = PLAYER_WIDTH;
     p->aabb.height = PLAYER_HEIGHT;
-
+    p->velocity = (Vector2){0,0};
     p->aabb.y = SCREEN_HEIGHT * IDLE_Y  - PLAYER_HEIGHT;
     p->idle_pos.y = p->aabb.y;
 }
