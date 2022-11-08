@@ -73,7 +73,7 @@ int main(void) {
         EndDrawing();                                                       // 다음 프레임 버퍼 준비(더블 버퍼링 기법)
     }
 
-    /** release memory */
+    /** release a memory */
     DeletePlayer(p);                                                        // T-Rex 동적할당 해제
     Delete_ObManager(ob);                                                   // 장애물 관리자 동적할당 해제
     UnloadTexture(texture);                                                 // 리소스 메모리 동적할당 해제
