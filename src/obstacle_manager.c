@@ -13,7 +13,7 @@
 /** 지나간 ms의 총 크기(0 - 1000ms)*/
 static float time_ms;
 /** 장애물 생성 지연 시간*/
-static int spawn_delay = 30;
+static int spawn_delay = OBSTACLE_INIT_SPAWN_DELAY;
 
 /**
  * @brief 장애물 관리자 화면에 표시
@@ -64,23 +64,22 @@ int getGap(ObstacleManager * ob, float speed);
  * 
  */
 const ObstacleData obstacleData[] = {
-    {{446,0,34,72},12,0,SMALL_CATUS},
-    {{480,0,68,72},12,0,SMALL_CATUS},
-    {{548,0,102,72},12,0,SMALL_CATUS},
-    {{652,0,50,102},12,0,BIG_CATUS},
-    {{702,0,100,102},12,0,BIG_CATUS},
-    {{802,0,150,102},12,0,BIG_CATUS},
-    {{260,0,92,82},15,8.5,PTERODACTYL}//352
+    {{446,0,34,72},   6,   0, SMALL_CATUS},
+    {{480,0,68,72},   6,   0, SMALL_CATUS},
+    {{548,0,102,72},  6,   0, SMALL_CATUS},
+    {{652,0,50,102},  6,   0, BIG_CATUS},
+    {{702,0,100,102}, 6,   0, BIG_CATUS},
+    {{802,0,150,102}, 6,   0, BIG_CATUS},
+    {{260,0,92,82},   8, 8.5, PTERODACTYL}//352
 };
 
 /** 텍스쳐 저장 변수*/
 static Texture texture;
 
-
 extern bool isGameOver;
 extern bool game_debug;
 
-ObstacleManager * ObManagerCreate(){
+ObstacleManager * ObManagerCreate() {
     ObstacleManager * ob = (ObstacleManager *)malloc(sizeof(ObstacleManager));
     ob->obstacles = create_queue(10);
     ob->show = ObManager_show;
@@ -89,22 +88,29 @@ ObstacleManager * ObManagerCreate(){
     return ob;
 }
 
+void resetObManager(ObstacleManager *ob) {
+    while(queue_deque(ob->obstacles, NULL));
+    spawn_delay = OBSTACLE_INIT_SPAWN_DELAY;
+    ob->timePass = 0;
+    ob->moveSpeed = OBSTACLE_MOVE_SPEED;
+}
+
 void Delete_ObManager(ObstacleManager * ob){
     free(ob);
     destroy_queue(ob->obstacles);
 }
 
 int getGap(ObstacleManager * ob, float speed) {
-    int minGap;
+    int maxGap;
     if(queue_is_empty(ob->obstacles))
-        minGap = 0;
+        maxGap = 0;
     else{
         Obstacle obstacle = ob->obstacles->data[ob->obstacles->front];
-        minGap = obstacle.aabb.width * 0.03 * speed + getObstacle()[obstacle.index].minGap;
+        maxGap = obstacle.aabb.width * 0.015 + speed * getObstacle()[obstacle.index].minGap * 0.25;
     }
-    int maxGap = minGap * 0.4;
-    TraceLog(LOG_DEBUG,"minGap : %d, maxGap: %d",minGap,maxGap);
-    return GetRandomValue(maxGap,minGap);
+    int minGap = maxGap * 0.7;
+    TraceLog(LOG_DEBUG,"maxGap : %d, maxGap: %d",maxGap,minGap);
+    return GetRandomValue(minGap,maxGap);
 }
 
 void setObstacleTexture(Texture text){
@@ -117,7 +123,6 @@ ObstacleData * getObstacle(){
 
 /** 은닉 함수*/
 
-
 static void ObManager_show(ObstacleManager * ob){
     if(!isGameOver){
         update_time(ob);
@@ -126,7 +131,6 @@ static void ObManager_show(ObstacleManager * ob){
     };
     draw_obstacle(ob);
 }
-
 
 static void update_time(ObstacleManager * ob){
     float temp = GetFrameTime();
@@ -139,8 +143,6 @@ static void update_time(ObstacleManager * ob){
     }
 }
 
-
-
 static void create_obstacle(ObstacleManager * ob){
     
     if(spawn_delay == 0){
@@ -152,9 +154,7 @@ static void create_obstacle(ObstacleManager * ob){
         queue_enque(ob->obstacles,temp);
         spawn_delay = 0;
     }
-
 }
-
 
 static void update_obstacle(ObstacleManager * ob){
     int n = (ob->obstacles->rear + ob->obstacles->total - ob->obstacles->front) % ob->obstacles->total;
@@ -183,7 +183,6 @@ static void draw_obstacle(ObstacleManager * ob){
             DrawRectangleRec(ob->obstacles->data[tfront].aabb, Fade(BLUE,0.2f));
         i++;
         tfront = (tfront + 1) % ob->obstacles->total;
-
     }
 }
 
@@ -198,5 +197,4 @@ Obstacle * obstacleClosest(ObstacleManager * ob,Player * p){
         }
     }
     free(arr);
-
 }

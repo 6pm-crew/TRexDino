@@ -10,7 +10,7 @@
 #define FALL_SHORT_MULT 1.55f
 
 /** 플레이어 점프 속도 관련 상수*/
-#define PLAYER_JUMP_SPEED 1500
+#define PLAYER_JUMP_SPEED 1400
 
 /** 플레이어 기존 위치 비율*/
 #define IDLE_X 0.1f
@@ -50,7 +50,14 @@ typedef struct Player{
  * 
  * @return Player* 
  */
-Player * PlayerCreate();
+Player * createPlayer();
+
+/**
+ * @brief 플레이어를 초기화.
+ * 
+ * @return Player* 
+ */
+void resetPlayer(Player *p);
 
 /**
  * @brief 플레이어를 동적할당 해제한다.

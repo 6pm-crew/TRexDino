@@ -1,4 +1,3 @@
-
 #include "player.h"
 #include "raylib.h"
 #include "main.h"
@@ -61,7 +60,7 @@ enum PlayerDisplayType {
 extern bool isGameOver;
 extern bool game_debug;
 
-Player * PlayerCreate(){
+Player * createPlayer(){
     Player * p = (Player*)malloc(sizeof(Player));
     p->isJump = false;
     p->isLaydown = false;
@@ -74,6 +73,17 @@ Player * PlayerCreate(){
 
     p->show = DrawPlayer;
     return p;
+}
+
+void resetPlayer(Player *p) {
+    p->isJump = false;
+    p->isLaydown = false;
+    p->aabb.x = IDLE_X * SCREEN_WIDTH;
+    p->aabb.width = PLAYER_WIDTH;
+    p->aabb.height = PLAYER_HEIGHT;
+    p->velocity = (Vector2){0,0};
+    p->aabb.y = SCREEN_HEIGHT * IDLE_Y  - PLAYER_HEIGHT;
+    p->idle_pos.y = p->aabb.y;
 }
 
 void setPlayerTexture(Texture text){
@@ -89,6 +99,8 @@ static void DrawPlayer(Player *player) {
 
     static int frameCounter;
     int playerDisplayType = PLAYER_DEAD;
+    player->aabb.width = PLAYER_WIDTH;
+    player->aabb.height = PLAYER_HEIGHT;
     if(!isGameOver){
         ApplyGravity(player);
         player_move(player);
@@ -102,7 +114,8 @@ static void DrawPlayer(Player *player) {
             player->aabb.height = PLAYER_HEIGHT_LAY;
             playerDisplayType = PLAYER_ALIVE_LAY;
         }
-    };
+    }
+
 
     DrawTexturePro(texture,\
         textruePlayerData[playerDisplayType][frameCounter > INTERVAL],\

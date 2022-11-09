@@ -7,7 +7,6 @@
 
 /** 큐 데이터 타입 Obstacle로 설정*/
 
-
 /** 장애물 이동 속도*/ //기본 6
 #define OBSTACLE_MOVE_SPEED 6
 /** 장애물 이동 계수*/
@@ -21,6 +20,7 @@
 /** 장애물 총 종류 */
 #define OBSTACLE_TOTAL_COUNT 3 
 
+#define OBSTACLE_INIT_SPAWN_DELAY 30
 
 /**
  * @brief 장애물 관리자 생성 함수
@@ -28,6 +28,13 @@
  * @return ObstacleManager* 장애물 변수
  */
 ObstacleManager * ObManagerCreate();
+
+/**
+ * @brief 장애물 관리자 초기화 함수
+ * 
+ * @param ob 장애물 관리자
+ */
+void resetObManager(ObstacleManager *ob);
 
 /**
  * @brief 장애물 관리자 동적할당 해제 함수
@@ -59,7 +66,4 @@ void setObstacleTexture(Texture text);
  */
 ObstacleData * getObstacle();
 
-
-
 #endif
-
