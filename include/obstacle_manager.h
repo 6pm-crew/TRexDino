@@ -7,7 +7,6 @@
 
 /** 큐 데이터 타입 Obstacle로 설정*/
 
-
 /** 장애물 이동 속도*/ //기본 6
 #define OBSTACLE_MOVE_SPEED 6
 /** 장애물 이동 계수*/
@@ -67,7 +66,4 @@ void setObstacleTexture(Texture text);
  */
 ObstacleData * getObstacle();
 
-
-
 #endif
-

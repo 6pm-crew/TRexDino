@@ -12,5 +12,4 @@
 /** 배경화면 화면*/
 #define BACKGROUND_COLOR   ((Color) { 255, 255, 255, 255 })
 
-
 #endif

@@ -64,23 +64,22 @@ int getGap(ObstacleManager * ob, float speed);
  * 
  */
 const ObstacleData obstacleData[] = {
-    {{446,0,34,72},6,0,SMALL_CATUS},
-    {{480,0,68,72},6,0,SMALL_CATUS},
-    {{548,0,102,72},6,0,SMALL_CATUS},
-    {{652,0,50,102},6,0,BIG_CATUS},
-    {{702,0,100,102},6,0,BIG_CATUS},
-    {{802,0,150,102},6,0,BIG_CATUS},
-    {{260,0,92,82},8,8.5,PTERODACTYL}//352
+    {{446,0,34,72},   6,   0, SMALL_CATUS},
+    {{480,0,68,72},   6,   0, SMALL_CATUS},
+    {{548,0,102,72},  6,   0, SMALL_CATUS},
+    {{652,0,50,102},  6,   0, BIG_CATUS},
+    {{702,0,100,102}, 6,   0, BIG_CATUS},
+    {{802,0,150,102}, 6,   0, BIG_CATUS},
+    {{260,0,92,82},   8, 8.5, PTERODACTYL}//352
 };
 
 /** 텍스쳐 저장 변수*/
 static Texture texture;
 
-
 extern bool isGameOver;
 extern bool game_debug;
 
-ObstacleManager * ObManagerCreate(){
+ObstacleManager * ObManagerCreate() {
     ObstacleManager * ob = (ObstacleManager *)malloc(sizeof(ObstacleManager));
     ob->obstacles = create_queue(10);
     ob->show = ObManager_show;
@@ -124,7 +123,6 @@ ObstacleData * getObstacle(){
 
 /** 은닉 함수*/
 
-
 static void ObManager_show(ObstacleManager * ob){
     if(!isGameOver){
         update_time(ob);
@@ -133,7 +131,6 @@ static void ObManager_show(ObstacleManager * ob){
     };
     draw_obstacle(ob);
 }
-
 
 static void update_time(ObstacleManager * ob){
     float temp = GetFrameTime();
@@ -146,8 +143,6 @@ static void update_time(ObstacleManager * ob){
     }
 }
 
-
-
 static void create_obstacle(ObstacleManager * ob){
     
     if(spawn_delay == 0){
@@ -159,9 +154,7 @@ static void create_obstacle(ObstacleManager * ob){
         queue_enque(ob->obstacles,temp);
         spawn_delay = 0;
     }
-
 }
-
 
 static void update_obstacle(ObstacleManager * ob){
     int n = (ob->obstacles->rear + ob->obstacles->total - ob->obstacles->front) % ob->obstacles->total;
@@ -190,7 +183,6 @@ static void draw_obstacle(ObstacleManager * ob){
             DrawRectangleRec(ob->obstacles->data[tfront].aabb, Fade(BLUE,0.2f));
         i++;
         tfront = (tfront + 1) % ob->obstacles->total;
-
     }
 }
 
@@ -205,5 +197,4 @@ Obstacle * obstacleClosest(ObstacleManager * ob,Player * p){
         }
     }
     free(arr);
-
 }

@@ -10,6 +10,16 @@ bool game_debug     = false;                                                // �
 bool isReady        = false;                                                // 게임 시작 준비 플래그
 bool isStart        = false;                                                // 게임 재시작 플래그
 
+/** display score material */
+int digits[5] = { 0, 0, 0, 0, 0};                                           // 점수 자릿수 저장
+Vector2 digitsList[5] = {                                                   // 점수 텍스쳐 출력 위치
+    {.x = SCREEN_WIDTH * 0.8f + 99, .y = 40},   //       1
+    {.x = SCREEN_WIDTH * 0.8f + 75, .y = 40},   //      10
+    {.x = SCREEN_WIDTH * 0.8f + 51, .y = 40},   //     100
+    {.x = SCREEN_WIDTH * 0.8f + 27, .y = 40},   //    1000
+    {.x = SCREEN_WIDTH * 0.8f +  3, .y = 40},   //   10000
+};
+
 int main(void) {
 
     /** default start option */
@@ -32,7 +42,7 @@ int main(void) {
     setObstacleTexture(texture);                                            // 장애물 텍스쳐 설정
 
     while (!WindowShouldClose()) {                                          // 사용자가 창을 닫을 때 까지 반복
-
+        
         /** frame buffer option */
         BeginDrawing();                                                     // 프레임 버퍼 초기화
         ClearBackground(BLACK);                                             // 프레임 버퍼 색상
@@ -45,8 +55,16 @@ int main(void) {
         ob->show(ob);                                                       // 장애물 출력
         p->show(p);                                                         // 플레이어 출력
         
+        /** display score */
+        int tmp = ob->timePass;
+        for(int i = 0; i < 5; i++) {
+            digits[i] = tmp % 10;
+            tmp /= 10;
+            DrawNumber(texture ,digitsList[i],digits[i]);                   // 자릿수 별로 숫자 출력
+        }
+
         /** game event option */
-        Obstacle * temp = obstacleClosest(ob,p);                            // 가장 가까운 장애물 반환
+        Obstacle *temp = obstacleClosest(ob,p);                             // 가장 가까운 장애물 반환
         if(temp != NULL)                                                    // 장애물과 충돌 시 게임오버
             if(CheckCollisionRecs(temp->aabb, p->aabb))
                 isGameOver = true;
