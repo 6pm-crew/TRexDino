@@ -39,11 +39,11 @@ void drawBackground(Texture2D texture,float speed){
 
 void gameOverBackround(Texture2D texture){
     const Rectangle bounds = { .width = SCREEN_WIDTH, .height = SCREEN_HEIGHT };
-    Rectangle textureSource = {.x = 954,.y = 29,.width = 381,.height = 21};
+    Rectangle textureSource = {.x = 954,.y = 29,.width = 382,.height = 22};
     DrawTexturePro(\
         texture,
         textureSource,\
-        (Rectangle) {.x = SCREEN_WIDTH * 0.5f - textureSource.width/2,.y = SCREEN_HEIGHT * 0.5f - textureSource.height / 2,.width = 381,.height = 21},\
+        (Rectangle) {.x = SCREEN_WIDTH * 0.5f - textureSource.width/2,.y = SCREEN_HEIGHT * 0.5f - textureSource.height / 2,.width = 382,.height = 22},\
         (Vector2){0,0},0,WHITE);
 }
 
