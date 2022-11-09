@@ -20,4 +20,4 @@ class WindowCapture:
             np.asarray(
                 pyautogui.screenshot(
                     region=(x, y,
-                            *win32gui.ClientToScreen(hwnd, (right - x, bot - y))))), cv2.COLOR_RGB2BGR)
+                            *win32gui.ClientToScreen(hwnd, (right - x, bot - y))))), cv2.COLOR_BGR2GRAY)
