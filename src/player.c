@@ -94,7 +94,7 @@ void DeletePlayer(Player * p){
     free(p);
 }
 
-/** 은닉 함수*/
+/** 은닉 함수 */
 static void DrawPlayer(Player *player) {
 
     static int frameCounter;
@@ -115,7 +115,6 @@ static void DrawPlayer(Player *player) {
             playerDisplayType = PLAYER_ALIVE_LAY;
         }
     }
-
 
     DrawTexturePro(texture,\
         textruePlayerData[playerDisplayType][frameCounter > INTERVAL],\
@@ -141,7 +140,6 @@ static void ApplyGravity(Player *player) {
     player->aabb.y += player->velocity.y * deltaTime; //넓이 값 구한다.
 
 }
-
 
 static void player_move(Player *player) {
     if (player->aabb.y >= player->idle_pos.y + player->isLaydown * (PLAYER_HEIGHT - PLAYER_HEIGHT_LAY)) {

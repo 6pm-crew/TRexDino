@@ -91,8 +91,8 @@ static int duplicateObstacleCheck(ObstacleManager * ob,int type){
 
 
 
-// 700 밤 -> 낮
-// 900 낮 -> 밤
+// 700  밤 -> 낮
+// 900  낮 -> 밤
 // 1400 밤 -> 낮
 // 1600 낮 -> 밤
 

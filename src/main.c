@@ -6,7 +6,7 @@
 
 /** boolean type flag */
 bool isGameOver     = false;                                                // 게임 오버 플래그
-bool game_debug     = true;                                                 // 게임 디버그 온/오프
+bool game_debug     = false;                                                 // 게임 디버그 온/오프
 bool isReady        = false;                                                // 게임 시작 준비 플래그
 bool isStart        = false;                                                // 게임 재시작 플래그
 bool displayRecord  = false;                                                // 최고 기록 표시
@@ -15,8 +15,9 @@ bool displayRecord  = false;                                                // �
 int bestRecord;                                                             // 최고 기록 저장
 int record[5];                                                              // 최고 기록 저장 및 출력
 int digits[5];                                                              // 점수 자릿수 저장 및 출력
-Rectangle text = {.x =  1154, .y = 2, .width = 38, .height = 23};           // HI   텍스쳐 출력 위치
-Vector2 digitsPosition[10] = {                                              // 점수 텍스쳐 출력 위치
+
+const Rectangle text = {.x =  1154, .y = 2, .width = 38, .height = 23};     // HI   텍스쳐 출력 위치
+const Vector2 digitsPosition[10] = {                                        // 점수 텍스쳐 출력 위치
     {.x = SCREEN_WIDTH * 0.8f + 99, .y = 40},   //        1
     {.x = SCREEN_WIDTH * 0.8f + 75, .y = 40},   //       10
     {.x = SCREEN_WIDTH * 0.8f + 51, .y = 40},   //      100
@@ -28,8 +29,6 @@ Vector2 digitsPosition[10] = {                                              // �
     {.x = SCREEN_WIDTH * 0.6f + 27, .y = 40},   // HI  1000
     {.x = SCREEN_WIDTH * 0.6f +  3, .y = 40},   // HI 10000
 };
-
-int tmp3 = -1;
 
 int main(void) {
 
@@ -68,16 +67,17 @@ int main(void) {
         
         /** display score */
         int tmp = ob->timePass;
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 5; i++) {                                        // 자릿수 별로 숫자 출력
             digits[i] = tmp % 10;
             tmp /= 10;
-            DrawNumber(texture ,digitsPosition[i],digits[i]);                   // 자릿수 별로 숫자 출력
+            DrawNumberAt(texture ,digitsPosition[i],digits[i]);
         }
 
-        if(displayRecord) { // test function
-            DrawTextImage(texture, text);
+        /** best record display option */
+        if(displayRecord) {                                                 // 최고 기록 출력
+            DrawResourceAt(texture, text);
             for(int i = 0; i < 5; i++)
-                DrawNumber(texture, digitsPosition[i+5], record[i]);
+                DrawNumberAt(texture, digitsPosition[i+5], record[i]);
         }
 
         /** game event option */
@@ -86,11 +86,6 @@ int main(void) {
             if(CheckCollisionRecs(temp->aabb, p->aabb))
                 isGameOver = true;
 
-        if(tmp3 != ob->timePass) {
-            tmp3 = ob->timePass;
-            printf("%d\n", tmp3);
-        }
-
         /** game play option */
         if(isGameOver){                                                     // 게임 오버 및 재시작
             gameOverBackround(texture);
@@ -98,13 +93,12 @@ int main(void) {
             if(isStart && (IsKeyReleased(KEY_R) || IsKeyReleased(KEY_SPACE) || IsKeyReleased(KEY_UP))) {
                 if(bestRecord < ob->timePass) {
                     bestRecord = ob->timePass;
-                    for(int i = 0; i < 5; i++) {                                // 최고 기록 저장
+                    TraceLog(LOG_DEBUG, "best record: %d", bestRecord);
+                    for(int i = 0; i < 5; i++) {                            // 최고 기록 저장
                         record[i] = ob->timePass % 10;
                         ob->timePass /= 10;
-                        printf("%d ", record[i]);
                     }
                 }
-
                 resetObManager(ob);                                         // 엔티티 및 플래그 초기화
                 resetPlayer(p);
                 isGameOver    = false;

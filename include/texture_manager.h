@@ -24,7 +24,7 @@ void gameOverBackround(Texture2D texture);
  * @param position 출력 위치
  * @param n        출력할 숫자
 */
-void DrawNumber(Texture2D texture, Vector2 position, int n);
+void DrawNumberAt(Texture2D texture, Vector2 position, int n);
 
 
 /**
@@ -33,6 +33,6 @@ void DrawNumber(Texture2D texture, Vector2 position, int n);
  * @param texture   사용할 텍스쳐
  * @param source    사용될 텍스트의 위치
  */
-void DrawTextImage(Texture2D texture, Rectangle source);
+void DrawResourceAt(Texture2D texture, Rectangle source);
 
 #endif

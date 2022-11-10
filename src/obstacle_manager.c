@@ -109,7 +109,7 @@ int getGap(ObstacleManager * ob, float speed) {
         maxGap = obstacle.aabb.width * 0.015 + speed * getObstacle()[obstacle.index].minGap * 0.25;
     }
     int minGap = maxGap * 0.7;
-    TraceLog(LOG_DEBUG,"maxGap : %d, maxGap: %d",maxGap,minGap);
+    TraceLog(LOG_DEBUG,"maxGap : %d, minGap: %d",maxGap,minGap);
     return GetRandomValue(minGap,maxGap);
 }
 
@@ -147,7 +147,7 @@ static void create_obstacle(ObstacleManager * ob){
     
     if(spawn_delay == 0){
         spawn_delay = getGap(ob,ob->moveSpeed) + ob->timePass;
-        printf("%d\n",spawn_delay);
+        TraceLog(LOG_DEBUG,"next pos: %d\n",spawn_delay);
     }
     if(spawn_delay <= ob->timePass){
         Obstacle temp = obstacle_make(ob,ob->moveSpeed);
