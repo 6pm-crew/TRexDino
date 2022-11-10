@@ -54,3 +54,11 @@ void DrawNumber(Texture2D texture, Vector2 position, int n) {
         (Rectangle) {.x = position.x, .y = position.y, .width = 18, .height = 23},\
         (Vector2){0,0},0, WHITE);
 }
+
+void DrawTextImage(Texture2D texture, Rectangle source) {
+    DrawTexturePro(\
+    texture,
+    source,\
+    (Rectangle) {.x = SCREEN_WIDTH * 0.6f - 45 , .y = 40, .width = 38, .height = 23},
+    (Vector2){0,0},0, WHITE);
+}

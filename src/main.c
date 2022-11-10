@@ -6,19 +6,30 @@
 
 /** boolean type flag */
 bool isGameOver     = false;                                                // 게임 오버 플래그
-bool game_debug     = false;                                                // 게임 디버그 온/오프
+bool game_debug     = true;                                                 // 게임 디버그 온/오프
 bool isReady        = false;                                                // 게임 시작 준비 플래그
 bool isStart        = false;                                                // 게임 재시작 플래그
+bool displayRecord  = false;                                                // 최고 기록 표시
 
 /** display score material */
-int digits[5] = { 0, 0, 0, 0, 0};                                           // 점수 자릿수 저장
-Vector2 digitsList[5] = {                                                   // 점수 텍스쳐 출력 위치
-    {.x = SCREEN_WIDTH * 0.8f + 99, .y = 40},   //       1
-    {.x = SCREEN_WIDTH * 0.8f + 75, .y = 40},   //      10
-    {.x = SCREEN_WIDTH * 0.8f + 51, .y = 40},   //     100
-    {.x = SCREEN_WIDTH * 0.8f + 27, .y = 40},   //    1000
-    {.x = SCREEN_WIDTH * 0.8f +  3, .y = 40},   //   10000
+int bestRecord;                                                             // 최고 기록 저장
+int record[5];                                                              // 최고 기록 저장 및 출력
+int digits[5];                                                              // 점수 자릿수 저장 및 출력
+Rectangle text = {.x =  1154, .y = 2, .width = 38, .height = 23};           // HI   텍스쳐 출력 위치
+Vector2 digitsPosition[10] = {                                              // 점수 텍스쳐 출력 위치
+    {.x = SCREEN_WIDTH * 0.8f + 99, .y = 40},   //        1
+    {.x = SCREEN_WIDTH * 0.8f + 75, .y = 40},   //       10
+    {.x = SCREEN_WIDTH * 0.8f + 51, .y = 40},   //      100
+    {.x = SCREEN_WIDTH * 0.8f + 27, .y = 40},   //     1000
+    {.x = SCREEN_WIDTH * 0.8f +  3, .y = 40},   //    10000
+    {.x = SCREEN_WIDTH * 0.6f + 99, .y = 40},   // HI     1
+    {.x = SCREEN_WIDTH * 0.6f + 75, .y = 40},   // HI    10
+    {.x = SCREEN_WIDTH * 0.6f + 51, .y = 40},   // HI   100
+    {.x = SCREEN_WIDTH * 0.6f + 27, .y = 40},   // HI  1000
+    {.x = SCREEN_WIDTH * 0.6f +  3, .y = 40},   // HI 10000
 };
+
+int tmp3 = -1;
 
 int main(void) {
 
@@ -60,7 +71,13 @@ int main(void) {
         for(int i = 0; i < 5; i++) {
             digits[i] = tmp % 10;
             tmp /= 10;
-            DrawNumber(texture ,digitsList[i],digits[i]);                   // 자릿수 별로 숫자 출력
+            DrawNumber(texture ,digitsPosition[i],digits[i]);                   // 자릿수 별로 숫자 출력
+        }
+
+        if(displayRecord) { // test function
+            DrawTextImage(texture, text);
+            for(int i = 0; i < 5; i++)
+                DrawNumber(texture, digitsPosition[i+5], record[i]);
         }
 
         /** game event option */
@@ -69,16 +86,31 @@ int main(void) {
             if(CheckCollisionRecs(temp->aabb, p->aabb))
                 isGameOver = true;
 
+        if(tmp3 != ob->timePass) {
+            tmp3 = ob->timePass;
+            printf("%d\n", tmp3);
+        }
+
         /** game play option */
         if(isGameOver){                                                     // 게임 오버 및 재시작
             gameOverBackround(texture);
 
             if(isStart && (IsKeyReleased(KEY_R) || IsKeyReleased(KEY_SPACE) || IsKeyReleased(KEY_UP))) {
+                if(bestRecord < ob->timePass) {
+                    bestRecord = ob->timePass;
+                    for(int i = 0; i < 5; i++) {                                // 최고 기록 저장
+                        record[i] = ob->timePass % 10;
+                        ob->timePass /= 10;
+                        printf("%d ", record[i]);
+                    }
+                }
+
                 resetObManager(ob);                                         // 엔티티 및 플래그 초기화
                 resetPlayer(p);
-                isGameOver = false;
-                isReady    = false;
-                isStart    = false;
+                isGameOver    = false;
+                isReady       = false;
+                isStart       = false;
+                displayRecord = true;
             }        
 
             else if(isReady && (IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE) || IsKeyReleased(KEY_UP))) 
