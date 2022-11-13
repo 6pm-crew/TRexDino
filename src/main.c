@@ -89,8 +89,8 @@ int main(void) {
                 isReady = true;                                             // 게임 시작 준비
         }
         DrawFPS(8, 8);                                                      // x, y 위치에 fps 출력
-        sendData(LoadImageFromScreen());
         EndDrawing();                                                       // 다음 프레임 버퍼 준비(더블 버퍼링 기법)
+        sendData(LoadImageFromScreen());
     }
 
     /** release a memory */

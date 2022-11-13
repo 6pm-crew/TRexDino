@@ -25,7 +25,7 @@
 _COLOR_BEGIN := $(shell tput setaf 13)
 _COLOR_END := $(shell tput sgr0)
 
-RAYLIB_PATH ?= lib/raylib-slim
+# RAYLIB_PATH ?= lib/raylib-slim
 
 PROJECT_NAME := play
 PROJECT_FULL_NAME := 6pm-crew/play

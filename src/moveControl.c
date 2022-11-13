@@ -8,8 +8,8 @@
 #include "raylib.h"
 
 static const char * shmem_name = "trexDino";
-static const size_t shm_size = 4096;
-void * addr;
+static const size_t shm_size = 4 * 600 * 800;
+unsigned char * addr;
 void openSharedMemory(){
     int shmem_fd = shm_open(shmem_name, O_CREAT|O_RDWR, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP);
     if (shmem_fd == -1) {
@@ -27,16 +27,10 @@ void openSharedMemory(){
 }
 
 int sendData(Image image){
-    // printf("Please enter some text to write to shared memory segment\n");
-
-    // char test[] = "jiral";
-    // strncpy((char *)addr, test, shm_size);
-    // unsigned 
-    memcpy((Image *)addr,&image,sizeof(image));
-    // printf("Unlinking shared memory segment.\n");
+    unsigned char * temp = (unsigned char *)image.data;
+    memcpy(addr, temp, 4 * 600 * 800 * sizeof(unsigned char));
 }
 
 void closeSharedMemory(){
-    free(addr);
     shm_unlink(shmem_name) ;
 }
