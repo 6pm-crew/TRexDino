@@ -3,6 +3,7 @@
 #include "obstacle_manager.h"
 #include "texture_manager.h"
 #include "main.h"
+#include "moveControl.h"
 
 /** boolean type flag */
 bool isGameOver     = false;                                                // 게임 오버 플래그
@@ -40,7 +41,7 @@ int main(void) {
     Texture2D  texture  = LoadTexture("res/images/offline-sprite-2x.png");  // 리소스 불러오기
     setPlayerTexture(texture);                                              // 플레이어 텍스쳐 설정
     setObstacleTexture(texture);                                            // 장애물 텍스쳐 설정
-
+    openSharedMemory();
     while (!WindowShouldClose()) {                                          // 사용자가 창을 닫을 때 까지 반복
         
         /** frame buffer option */
@@ -88,10 +89,12 @@ int main(void) {
                 isReady = true;                                             // 게임 시작 준비
         }
         DrawFPS(8, 8);                                                      // x, y 위치에 fps 출력
+        sendData(LoadImageFromScreen());
         EndDrawing();                                                       // 다음 프레임 버퍼 준비(더블 버퍼링 기법)
     }
 
     /** release a memory */
+    closeSharedMemory();
     DeletePlayer(p);                                                        // T-Rex 동적할당 해제
     Delete_ObManager(ob);                                                   // 장애물 관리자 동적할당 해제
     UnloadTexture(texture);                                                 // 리소스 메모리 동적할당 해제

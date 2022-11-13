@@ -65,7 +65,7 @@ endif
 CC := gcc
 CFLAGS := -D_DEFAULT_SOURCE -g $(INCLUDE_PATH:%=-I%) -O2 -std=gnu99
 LDFLAGS := $(LIBRARY_PATH:%=-L%)
-LDLIBS := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -fno-stack-protector
+LDLIBS := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -fno-stack-protector -lrt
 
 PLATFORM := $(HOST_PLATFORM)
 
