@@ -8,7 +8,7 @@
 
 #define SHMEM_TOTAL_SIZE        sizeof(SharedData)
 
-#define SHMEM_WRITE_THRESHOLD   0.1f
+#define SHMEM_WRITE_THRESHOLD   0.08f
 
 /**
  * @brief 공유 메모리 데이터를 나타내는 구조체.
