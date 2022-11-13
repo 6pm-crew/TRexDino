@@ -22,6 +22,8 @@ Vector2 digitsList[5] = {                                                   // �
     {.x = SCREEN_WIDTH * 0.8f +  3, .y = 40},   //   10000
 };
 
+float elapsedTime;
+
 int main(void) {
     /** default start option */
     SetTargetFPS(TARGET_FPS);                                               // fps 설정
@@ -94,10 +96,18 @@ int main(void) {
             else if(!(IsKeyDown(KEY_R) || IsKeyDown(KEY_SPACE) || IsKeyReleased(KEY_UP))) 
                 isReady = true;                                             // 게임 시작 준비
         }
-        DrawFPS(8, 8);                                                      // x, y 위치에 fps 출력
-        EndDrawing();                                                       // 다음 프레임 버퍼 준비(더블 버퍼링 기법)
 
-        WriteToSharedMemory();
+        DrawFPS(8, 8);                                                      // x, y 위치에 fps 출력
+
+        EndDrawing();                                                       // 다음 프레임 버퍼 준비(더블 버퍼링 기법)
+        
+        if (elapsedTime >= SHMEM_WRITE_THRESHOLD) {
+            WriteToSharedMemory();
+
+            elapsedTime = 0.0f;
+        }
+        
+        elapsedTime += GetFrameTime();
     }
 
     /** release a memory */

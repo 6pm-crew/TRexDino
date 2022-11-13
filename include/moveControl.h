@@ -2,6 +2,8 @@
 
 #include "raylib.h"
 
+#define SHMEM_WRITE_THRESHOLD 0.1f
+
 /**
  * @brief 공유 메모리를 생성한다.
  */
