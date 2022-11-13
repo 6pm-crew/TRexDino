@@ -1,36 +1,90 @@
+#include <string.h>
+
 #include <sys/mman.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <string.h>
-#include <stdio.h>
 
-#include "raylib.h"
+#include "main.h"
+#include "moveControl.h"
 
-static const char * shmem_name = "trexDino";
-static const size_t shm_size = 4 * 600 * 800;
-unsigned char * addr;
-void openSharedMemory(){
-    int shmem_fd = shm_open(shmem_name, O_CREAT|O_RDWR, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP);
-    if (shmem_fd == -1) {
-        return;
-    }
-    printf("Shared Memory segment created with fd %d",shmem_fd);
-    if (ftruncate(shmem_fd, shm_size) == -1) {
-        return;
-    }
-    printf("Shared Memory segment resized to %d",shm_size);
-    addr = mmap(0, shm_size, PROT_WRITE, MAP_SHARED, shmem_fd, 0);
-    if (addr == MAP_FAILED) {
-        return;
-    }
+/**
+ * @brief 공유 메모리 객체의 이름
+ */
+static const char *SHMEM_NAME = "trexDino";
+
+/**
+ * @brief 공유 메모리의 크기
+ */
+static const int SHMEM_SIZE = SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(SHMEM_SIZE);
+
+/**
+ * @brief 공유 메모리의 주소.
+ */
+static void *shmem_ptr = NULL;
+
+/**
+ * @brief 공유 메모리를 생성한다.
+ * 
+ * @return 메모리 생성 가능 여부
+ */
+bool OpenSharedMemory(void) {
+    // 공유 메모리 객체를 생성한다.
+    int fd = shm_open(
+        SHMEM_NAME,
+        O_CREAT | O_RDWR, 
+        S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP
+    );
+
+    if (fd == -1) return false;
+
+    TraceLog(LOG_INFO, "GAME: 공유 메모리 객체 생성 완료");
+
+    // 공유 메모리의 크기를 설정한다.
+    if (ftruncate(fd, SHMEM_SIZE) == -1) return false;
+
+    // 공유 메모리를 실제로 할당한다.
+    shmem_ptr = mmap(
+        NULL, 
+        SHMEM_SIZE, 
+        PROT_READ | PROT_WRITE,
+        MAP_SHARED,
+        fd,
+        0L
+    );
+
+    if (shmem_ptr == MAP_FAILED) return false;
+
+    TraceLog(LOG_INFO, "GAME: 공유 메모리 할당 완료 (%.1f MB)", SHMEM_SIZE / 1000000.0);
+
+    return true;
 }
 
-int sendData(Image image){
-    unsigned char * temp = (unsigned char *)image.data;
-    memcpy(addr, temp, 4 * 600 * 800 * sizeof(unsigned char));
+/**
+ * @brief 공유 메모리를 해제한다.
+ */
+void CloseSharedMemory(void) {
+    if (munmap(shmem_ptr, SHMEM_SIZE) != -1)
+        TraceLog(LOG_INFO, "GAME: 공유 메모리 해제 완료 (~%.1f MB)", SHMEM_SIZE / 1000000.0);
+
+    if (shm_unlink(SHMEM_NAME) != -1)
+        TraceLog(LOG_INFO, "GAME: 공유 메모리 객체 삭제 완료");
 }
 
-void closeSharedMemory(){
-    shm_unlink(shmem_name) ;
+/**
+ * @brief 공유 메모리 데이터를 업데이트한다.
+ * 
+ * @param image 게임 화면 정보.
+ */
+void WriteToSharedMemory(void) {
+    const Image image = LoadImageFromScreen();
+
+    memcpy(shmem_ptr, (unsigned char *) image.data, SHMEM_SIZE);
+
+    TraceLog(LOG_DEBUG, "GAME: 공유 메모리에 게임 데이터 작성 완료");
+
+    // 공유 메모리의 변경 사항을 즉시 기록한다.
+    if (msync(shmem_ptr, SHMEM_SIZE, MS_SYNC) != -1)
+        TraceLog(LOG_DEBUG, "GAME: 공유 메모리에 변경 사항 기록 완료");
+
+    RL_FREE(image.data);
 }

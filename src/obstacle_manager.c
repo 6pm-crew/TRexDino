@@ -63,7 +63,7 @@ int getGap(ObstacleManager * ob, float speed);
  * @brief 기본 지정된 스프라이트 이미지 위치 와 기본 데이터
  * 
  */
-const ObstacleData obstacleData[] = {
+ObstacleData obstacleData[] = {
     {{446,0,34,72},   6,   0, SMALL_CATUS},
     {{480,0,68,72},   6,   0, SMALL_CATUS},
     {{548,0,102,72},  6,   0, SMALL_CATUS},
@@ -77,7 +77,7 @@ const ObstacleData obstacleData[] = {
 static Texture texture;
 
 extern bool isGameOver;
-extern bool game_debug;
+extern bool debugMode;
 
 ObstacleManager * ObManagerCreate() {
     ObstacleManager * ob = (ObstacleManager *)malloc(sizeof(ObstacleManager));
@@ -179,7 +179,7 @@ static void draw_obstacle(ObstacleManager * ob){
             obstacleData[ob->obstacles->data[tfront].index].data,\
             ob->obstacles->data[tfront].aabb,\
             (Vector2){0,0},0,WHITE);
-        if(game_debug)
+        if(debugMode)
             DrawRectangleRec(ob->obstacles->data[tfront].aabb, Fade(BLUE,0.2f));
         i++;
         tfront = (tfront + 1) % ob->obstacles->total;

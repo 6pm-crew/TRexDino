@@ -58,7 +58,7 @@ enum PlayerDisplayType {
 };
 
 extern bool isGameOver;
-extern bool game_debug;
+extern bool debugMode;
 
 Player * createPlayer(){
     Player * p = (Player*)malloc(sizeof(Player));
@@ -121,8 +121,9 @@ static void DrawPlayer(Player *player) {
         textruePlayerData[playerDisplayType][frameCounter > INTERVAL],\
         player->aabb,\
         (Vector2){0,0},0,WHITE);
-    if(game_debug)
-        DrawRectangleRec(player->aabb, Fade(BLUE,0.25f));
+
+    if(debugMode) DrawRectangleRec(player->aabb, Fade(BLUE,0.25f));
+    
     frameCounter++;
     if(frameCounter > INTERVAL *2) frameCounter = 0;
 }

@@ -7,9 +7,10 @@
 
 /** boolean type flag */
 bool isGameOver     = false;                                                // 게임 오버 플래그
-bool game_debug     = false;                                                // 게임 디버그 온/오프
+bool debugMode      = false;                                                // 게임 디버그 온/오프
 bool isReady        = false;                                                // 게임 시작 준비 플래그
 bool isStart        = false;                                                // 게임 재시작 플래그
+bool error          = false;                                                // 게임 시작 오류 발생 여부
 
 /** display score material */
 int digits[5] = { 0, 0, 0, 0, 0};                                           // 점수 자릿수 저장
@@ -22,28 +23,33 @@ Vector2 digitsList[5] = {                                                   // �
 };
 
 int main(void) {
-
     /** default start option */
     SetTargetFPS(TARGET_FPS);                                               // fps 설정
-    if(game_debug) 
-        SetTraceLogLevel(LOG_DEBUG);                                        // 디버그 출력
+
+    if (debugMode) SetTraceLogLevel(LOG_DEBUG);                             // 디버그 출력
+
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "T-Rex Game");                  // 화면 생성
     SetExitKey(KEY_NULL);                                                   // ESC 종료 방지
     
     /** window border of rectangle type */
-    const Rectangle bounds = { .width = SCREEN_WIDTH, .height = SCREEN_HEIGHT };
+    const Rectangle bounds = { 
+        .width = SCREEN_WIDTH, 
+        .height = SCREEN_HEIGHT 
+    };
     
     /** game entity option */
     Player          *p  = createPlayer();                                   // T-Rex 생성
     ObstacleManager *ob = ObManagerCreate();                                // 장애물 관리자 생성
 
     /** texture option */
-    Texture2D  texture  = LoadTexture("res/images/offline-sprite-2x.png");  // 리소스 불러오기
+    Texture2D texture = LoadTexture("res/images/offline-sprite-2x.png");    // 리소스 불러오기
+
     setPlayerTexture(texture);                                              // 플레이어 텍스쳐 설정
     setObstacleTexture(texture);                                            // 장애물 텍스쳐 설정
-    openSharedMemory();
-    while (!WindowShouldClose()) {                                          // 사용자가 창을 닫을 때 까지 반복
-        
+
+    if (!OpenSharedMemory()) error = true;
+    
+    while (!error && !WindowShouldClose()) {                                // 사용자가 창을 닫을 때 까지 반복
         /** frame buffer option */
         BeginDrawing();                                                     // 프레임 버퍼 초기화
         ClearBackground(BLACK);                                             // 프레임 버퍼 색상
@@ -90,11 +96,13 @@ int main(void) {
         }
         DrawFPS(8, 8);                                                      // x, y 위치에 fps 출력
         EndDrawing();                                                       // 다음 프레임 버퍼 준비(더블 버퍼링 기법)
-        sendData(LoadImageFromScreen());
+
+        WriteToSharedMemory();
     }
 
     /** release a memory */
-    closeSharedMemory();
+    CloseSharedMemory();
+    
     DeletePlayer(p);                                                        // T-Rex 동적할당 해제
     Delete_ObManager(ob);                                                   // 장애물 관리자 동적할당 해제
     UnloadTexture(texture);                                                 // 리소스 메모리 동적할당 해제
