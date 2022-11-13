@@ -64,13 +64,13 @@ int getGap(ObstacleManager * ob, float speed);
  * 
  */
 ObstacleData obstacleData[] = {
-    {{446,0,34,72},   6,   0, SMALL_CATUS},
-    {{480,0,68,72},   6,   0, SMALL_CATUS},
-    {{548,0,102,72},  6,   0, SMALL_CATUS},
-    {{652,0,50,102},  6,   0, BIG_CATUS},
-    {{702,0,100,102}, 6,   0, BIG_CATUS},
-    {{802,0,150,102}, 6,   0, BIG_CATUS},
-    {{260,0,92,82},   8, 8.5, PTERODACTYL}//352
+    {{446,0,34,72},   7,   0, SMALL_CATUS},
+    {{480,0,68,72},   7,   0, SMALL_CATUS},
+    {{548,0,102,72},  7,   0, SMALL_CATUS},
+    {{652,0,50,102},  7,   0, BIG_CATUS},
+    {{702,0,100,102}, 7,   0, BIG_CATUS},
+    {{802,0,150,102}, 7,   0, BIG_CATUS},
+    {{260,0,92,82},   10, 8.5, PTERODACTYL}//352
 };
 
 /** 텍스쳐 저장 변수*/
