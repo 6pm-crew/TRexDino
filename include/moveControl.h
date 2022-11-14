@@ -1,3 +1,8 @@
+#ifdef DQN_ENABLE
+
+#ifndef MOVECONTROL_H
+#define MOVECONTROL_H
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -37,3 +42,6 @@ void CloseSharedMemory(void);
  * @param image 게임 화면 정보.
  */
 void WriteToSharedMemory(void);
+
+#endif
+#endif

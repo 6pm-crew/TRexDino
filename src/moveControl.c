@@ -7,6 +7,7 @@
 #include "main.h"
 #include "moveControl.h"
 
+#ifdef DQN_ENABLE
 /**
  * @brief 공유 메모리 객체의 이름
  */
@@ -111,3 +112,5 @@ void WriteToSharedMemory(void) {
 
     RL_FREE(image.data);
 }
+
+#endif
