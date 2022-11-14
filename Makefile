@@ -20,12 +20,12 @@
 # SOFTWARE.
 #
 
-.PHONY: all clean
+.PHONY: all clean setting
 
 _COLOR_BEGIN := $(shell tput setaf 13)
 _COLOR_END := $(shell tput sgr0)
 
-# RAYLIB_PATH ?= lib/raylib-slim
+RAYLIB_PATH ?= lib/raylib-slim
 
 PROJECT_NAME := play
 PROJECT_FULL_NAME := 6pm-crew/play
@@ -72,6 +72,7 @@ PLATFORM := $(HOST_PLATFORM)
 ifeq ($(PLATFORM),WINDOWS)
 	TARGETS := $(BINARY_PATH)/$(PROJECT_NAME).exe
 
+
 	ifneq ($(HOST_PLATFORM),WINDOWS)
 		CC := x86_64-w64-mingw32-gcc
 	endif
@@ -87,16 +88,27 @@ else ifeq ($(PLATFORM),WEB)
 	WEBFLAGS += --preload-file $(RESOURCE_PATH) --shell-file $(RESOURCE_PATH)/html/shell.html
 endif
 
+DQN_STATUS := DQN_DISABLE
+ifeq ($(DQN),ENABLE)
+DQN_STATUS := DQN_ENABLE
+endif
 all: pre-build build post-build
 
 pre-build:
 	@echo "$(PROJECT_PREFIX) Using: '$(CC)' to build this project."
-    
+ifeq ($(HOST_PLATFORM),WINDOWS)
+	$(MAKE) -C $(RAYLIB_PATH)/src -j`nproc` OS=Windows_NT CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar
+else ifeq ($(HOST_PLATFORM),WEB)
+	@echo "Skipping FOR WEB"
+else
+	@$(MAKE) -C $(RAYLIB_PATH)/src install
+	@$(MAKE) -j`nproc` -C $(RAYLIB_PATH)/src
+endif
 build: $(TARGETS)
 
 $(SOURCE_PATH)/%.o: $(SOURCE_PATH)/%.c
 	@echo "$(PROJECT_PREFIX) Compiling: $@ (from $<)"
-	@$(CC) -c $< -o $@ $(CFLAGS)
+	@$(CC) -c $< -o $@ $(CFLAGS) -D $(DQN_STATUS)
     
 $(TARGETS): $(OBJECTS)
 	@mkdir -p $(BINARY_PATH)
@@ -110,3 +122,5 @@ clean:
 	@echo "$(PROJECT_PREFIX) Cleaning up."
 	@rm -rf $(BINARY_PATH)/*
 	@rm -rf $(SOURCE_PATH)/*.o
+	@$(MAKE) -C $(RAYLIB_PATH)/src clean
+
