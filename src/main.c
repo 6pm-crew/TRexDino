@@ -48,9 +48,10 @@ int main(void) {
 
     setPlayerTexture(texture);                                              // 플레이어 텍스쳐 설정
     setObstacleTexture(texture);                                            // 장애물 텍스쳐 설정
-
+#ifdef DQN_ENABLE
+    TraceLog(LOG_INFO,"GAME: DQN 활성화");
     if (!OpenSharedMemory()) error = true;
-    
+#endif
     while (!error && !WindowShouldClose()) {                                // 사용자가 창을 닫을 때 까지 반복
         /** frame buffer option */
         BeginDrawing();                                                     // 프레임 버퍼 초기화
@@ -100,7 +101,7 @@ int main(void) {
         DrawFPS(8, 8);                                                      // x, y 위치에 fps 출력
 
         EndDrawing();                                                       // 다음 프레임 버퍼 준비(더블 버퍼링 기법)
-        
+#ifdef DQN_ENABLE
         if (elapsedTime >= SHMEM_WRITE_THRESHOLD) {
             WriteToSharedMemory();
 
@@ -108,11 +109,13 @@ int main(void) {
         }
         
         elapsedTime += GetFrameTime();
+#endif
     }
 
     /** release a memory */
+#ifdef DQN_ENABLE
     CloseSharedMemory();
-    
+#endif    
     DeletePlayer(p);                                                        // T-Rex 동적할당 해제
     Delete_ObManager(ob);                                                   // 장애물 관리자 동적할당 해제
     UnloadTexture(texture);                                                 // 리소스 메모리 동적할당 해제
