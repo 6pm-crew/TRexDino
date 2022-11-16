@@ -41,7 +41,7 @@ void resetObManager(ObstacleManager *ob);
  * 
  * @param ob 장애물 관리자
  */
-void Delete_ObManager(ObstacleManager * ob);
+void delete_ObManager(ObstacleManager * ob);
 
 /**
  * @brief 가장 가까운 장애물을 반환해주는 함수

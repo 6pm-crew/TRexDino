@@ -6,7 +6,7 @@
 
 /** boolean type flag */
 bool isGameOver     = false;                                                // 게임 오버 플래그
-bool game_debug     = false;                                                 // 게임 디버그 온/오프
+bool game_debug     = false;                                                // 게임 디버그 온/오프
 bool isReady        = false;                                                // 게임 시작 준비 플래그
 bool isStart        = false;                                                // 게임 재시작 플래그
 bool displayRecord  = false;                                                // 최고 기록 표시
@@ -18,11 +18,11 @@ int digits[5];                                                              // �
 
 const Rectangle text = {.x =  1154, .y = 2, .width = 38, .height = 23};     // HI   텍스쳐 출력 위치
 const Vector2 digitsPosition[10] = {                                        // 점수 텍스쳐 출력 위치
-    {.x = SCREEN_WIDTH * 0.8f + 99, .y = 40},   //        1
-    {.x = SCREEN_WIDTH * 0.8f + 75, .y = 40},   //       10
-    {.x = SCREEN_WIDTH * 0.8f + 51, .y = 40},   //      100
-    {.x = SCREEN_WIDTH * 0.8f + 27, .y = 40},   //     1000
-    {.x = SCREEN_WIDTH * 0.8f +  3, .y = 40},   //    10000
+    {.x = SCREEN_WIDTH * 0.8f + 99, .y = 40},   // SC     1
+    {.x = SCREEN_WIDTH * 0.8f + 75, .y = 40},   // SC    10
+    {.x = SCREEN_WIDTH * 0.8f + 51, .y = 40},   // SC   100
+    {.x = SCREEN_WIDTH * 0.8f + 27, .y = 40},   // SC  1000
+    {.x = SCREEN_WIDTH * 0.8f +  3, .y = 40},   // SC 10000
     {.x = SCREEN_WIDTH * 0.6f + 99, .y = 40},   // HI     1
     {.x = SCREEN_WIDTH * 0.6f + 75, .y = 40},   // HI    10
     {.x = SCREEN_WIDTH * 0.6f + 51, .y = 40},   // HI   100
@@ -70,14 +70,14 @@ int main(void) {
         for(int i = 0; i < 5; i++) {                                        // 자릿수 별로 숫자 출력
             digits[i] = tmp % 10;
             tmp /= 10;
-            DrawNumberAt(texture ,digitsPosition[i],digits[i]);
+            drawNumberAt(texture ,digitsPosition[i],digits[i]);
         }
 
         /** best record display option */
         if(displayRecord) {                                                 // 최고 기록 출력
-            DrawResourceAt(texture, text);
+            drawResourceAt(texture, text);
             for(int i = 0; i < 5; i++)
-                DrawNumberAt(texture, digitsPosition[i+5], record[i]);
+                drawNumberAt(texture, digitsPosition[i+5], record[i]);
         }
 
         /** game event option */
@@ -118,8 +118,8 @@ int main(void) {
     }
 
     /** release a memory */
-    DeletePlayer(p);                                                        // T-Rex 동적할당 해제
-    Delete_ObManager(ob);                                                   // 장애물 관리자 동적할당 해제
+    deletePlayer(p);                                                        // T-Rex 동적할당 해제
+    delete_ObManager(ob);                                                   // 장애물 관리자 동적할당 해제
     UnloadTexture(texture);                                                 // 리소스 메모리 동적할당 해제
 
     CloseWindow();                                                          // 화면 출력 종료

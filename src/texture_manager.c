@@ -47,7 +47,7 @@ void gameOverBackround(Texture2D texture){
         (Vector2){0,0},0,WHITE);
 }
 
-void DrawNumberAt(Texture2D texture, Vector2 position, int n) {
+void drawNumberAt(Texture2D texture, Vector2 position, int n) {
     DrawTexturePro(\
         texture,
         number[n],\
@@ -55,7 +55,7 @@ void DrawNumberAt(Texture2D texture, Vector2 position, int n) {
         (Vector2){0,0},0, WHITE);
 }
 
-void DrawResourceAt(Texture2D texture, Rectangle source) {
+void drawResourceAt(Texture2D texture, Rectangle source) {
     DrawTexturePro(\
     texture,
     source,\

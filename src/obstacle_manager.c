@@ -95,7 +95,7 @@ void resetObManager(ObstacleManager *ob) {
     ob->moveSpeed = OBSTACLE_MOVE_SPEED;
 }
 
-void Delete_ObManager(ObstacleManager * ob){
+void delete_ObManager(ObstacleManager * ob){
     free(ob);
     destroy_queue(ob->obstacles);
 }
