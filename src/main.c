@@ -15,7 +15,6 @@ bool displayRecord  = false;                                                // �
 int bestRecord;                                                             // 최고 기록 저장
 int record[5];                                                              // 최고 기록 저장 및 출력
 int digits[5];                                                              // 점수 자릿수 저장 및 출력
-
 const Rectangle text = {.x =  1154, .y = 2, .width = 38, .height = 23};     // HI   텍스쳐 출력 위치
 const Vector2 digitsPosition[10] = {                                        // 점수 텍스쳐 출력 위치
     {.x = SCREEN_WIDTH * 0.8f + 99, .y = 40},   // SC     1

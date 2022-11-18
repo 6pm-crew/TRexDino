@@ -6,21 +6,13 @@
 #include "obstacle_type.h"
 
 /** 큐 데이터 타입 Obstacle로 설정*/
+#define OBSTACLE_MOVE_SPEED         6       // 장애물 이동 속도, 기본 6
+#define OBSTACLE_MOVE_SPEED_MUL     0.1     // 장애물 이동 계수
+#define OBSTACLE_IDLE_X_MULT        0.98f   // 장애물 기본 x축 위치 비율
+#define OBSTACLE_IDLE_Y_MULT        0.7f    // 장애물 기본 y축 위치 비율
+#define OBSTACLE_TOTAL_COUNT        3       // 장애물 총 종류
 
-/** 장애물 이동 속도*/ //기본 6
-#define OBSTACLE_MOVE_SPEED 6
-/** 장애물 이동 계수*/
-#define OBSTACLE_MOVE_SPEED_MUL 0.1
-
-/** 장애물 기본 x축 위치 비율*/
-#define OBSTACLE_IDLE_X_MULT 0.98f
-/** 장애물 기본 y축 위치 비율*/
-#define OBSTACLE_IDLE_Y_MULT 0.7f
-
-/** 장애물 총 종류 */
-#define OBSTACLE_TOTAL_COUNT 3 
-
-#define OBSTACLE_INIT_SPAWN_DELAY 30
+#define OBSTACLE_INIT_SPAWN_DELAY   30      // 장애물 초기화 및 스폰 딜레이
 
 /**
  * @brief 장애물 관리자 생성 함수

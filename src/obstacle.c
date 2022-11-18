@@ -1,23 +1,20 @@
+#include <stdlib.h>
+#include <math.h>
 #include "raylib.h"
 #include "main.h"
-#include "obstacle_manager.h"
 #include "math.h"
-#include <stdlib.h>
+#include "obstacle_manager.h"
 
-
-#include <math.h>
-
-const int obstacleHeightData[] = {
-    0,//ground
-    56,//middle
-    100//height
+const int obstacleHeightData[] = {  // 지면 높이 정보
+    0,                  //ground
+    56,                 //middle
+    100                 //height
 };
 
-
 /**
- * @brief 화면에 표시되어있는 장애물의 개수가 특정 설정만큼 높지 않은지 확인한다.
+ * @brief 출력중인 장애물 개수 확인
  * 
- * @param ob 장애물 관리자
+ * @param ob   장애물 관리자
  * @param type 확인하고자 하는 타입 정보
  * @return int 
  */
@@ -69,7 +66,6 @@ static int duplicateObstacleCheck(ObstacleManager * ob,int type){
     return 0;
 }
 
-
 // type: "CACTUS_SMALL"
 // height: 35
 // minGap: 120
@@ -88,14 +84,10 @@ static int duplicateObstacleCheck(ObstacleManager * ob,int type){
 // numFrames: 2
 // speedOffset: 0.8
 
-
-
-
 // 700  밤 -> 낮
 // 900  낮 -> 밤
 // 1400 밤 -> 낮
 // 1600 낮 -> 밤
-
 
 // 2100
 // 2300 남 -> 밤

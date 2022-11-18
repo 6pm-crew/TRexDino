@@ -4,12 +4,10 @@
 #include "obstacle_manager.h"
 #include "texture_manager.h"
 
-/** 땅이 이동한 총 거리 */
-static float temp;
-
-extern bool isGameOver;
-
-const Rectangle number[10] = {
+/** flag and global variable */
+static float temp;                                                  // 땅이 이동한 총 거리
+extern bool isGameOver;                                             // 게임 오버 플래그
+const Rectangle number[10] = {                                      // 스프라이트 숫자 위치 정보
     {.x =  954, .y = 2, .width = 18, .height = 23},     // 0
     {.x =  976, .y = 2, .width = 18, .height = 23},     // 1
     {.x =  994, .y = 2, .width = 18, .height = 23},     // 2
@@ -22,6 +20,7 @@ const Rectangle number[10] = {
     {.x = 1134, .y = 2, .width = 18, .height = 23},     // 9
 };
 
+/** texture draw preferences */
 void drawBackground(Texture2D texture,float speed){
     if(!isGameOver) temp += speed;
     
@@ -36,7 +35,6 @@ void drawBackground(Texture2D texture,float speed){
         (Rectangle) {.x = 0,.y = SCREEN_HEIGHT * IDLE_Y  - 25,.width = SCREEN_WIDTH,.height = 28},\
         (Vector2){0,0},0,WHITE);
 }
-
 void gameOverBackround(Texture2D texture){
     const Rectangle bounds = { .width = SCREEN_WIDTH, .height = SCREEN_HEIGHT };
     Rectangle textureSource = {.x = 954,.y = 29,.width = 382,.height = 22};
@@ -46,7 +44,6 @@ void gameOverBackround(Texture2D texture){
         (Rectangle) {.x = SCREEN_WIDTH * 0.5f - textureSource.width/2,.y = SCREEN_HEIGHT * 0.5f - textureSource.height / 2,.width = 382,.height = 22},\
         (Vector2){0,0},0,WHITE);
 }
-
 void drawNumberAt(Texture2D texture, Vector2 position, int n) {
     DrawTexturePro(\
         texture,
@@ -54,7 +51,6 @@ void drawNumberAt(Texture2D texture, Vector2 position, int n) {
         (Rectangle) {.x = position.x, .y = position.y, .width = 18, .height = 23},\
         (Vector2){0,0},0, WHITE);
 }
-
 void drawResourceAt(Texture2D texture, Rectangle source) {
     DrawTexturePro(\
     texture,
