@@ -40,6 +40,8 @@ SOURCE_PATH := src
 RESOURCE_PATH := res
 
 INCLUDE_PATH += $(RAYLIB_PATH)/src
+LIBRARY_PATH += $(RAYLIB_PATH)/src
+
 SOURCES := $(wildcard $(SOURCE_PATH)/*.c)
 OBJECTS := $(SOURCES:.c=.o)
 
