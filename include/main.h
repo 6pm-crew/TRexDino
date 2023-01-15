@@ -10,6 +10,7 @@
 #define SCREEN_HEIGHT      600
 
 /** 배경화면 화면*/
-#define BACKGROUND_COLOR   ((Color) { 255, 255, 255, 255 })
+#define BACKGROUND_COLOR_LIGHT  ((Color) { 255, 255, 255, 255 })
+#define BACKGROUND_COLOR_DARK   ((Color) {  47,  47,  47, 255 })
 
 #endif

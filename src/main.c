@@ -10,6 +10,7 @@ bool game_debug     = false;                                                // �
 bool isReady        = false;                                                // 게임 시작 준비 플래그
 bool isStart        = false;                                                // 게임 재시작 플래그
 bool displayRecord  = false;                                                // 최고 기록 표시
+bool spawnObstacle  = false;                                                // 장애물 충돌 여부 플래그
 
 /** display score material */
 int bestRecord;                                                             // 최고 기록 저장
@@ -28,6 +29,9 @@ const Vector2 digitsPosition[10] = {                                        // �
     {.x = SCREEN_WIDTH * 0.6f + 27, .y = 40},   // HI  1000
     {.x = SCREEN_WIDTH * 0.6f +  3, .y = 40},   // HI 10000
 };
+
+int background_color_temp = 13;
+Color background_color_variable = { 255, 255, 255, 255 };
 
 int main(void) {
 
@@ -57,7 +61,7 @@ int main(void) {
         ClearBackground(BLACK);                                             // 프레임 버퍼 색상
 
         /** game background option */
-        DrawRectangleRec(bounds, BACKGROUND_COLOR);                         // 화면에 짙은 회색 직사각형 그리기
+        DrawRectangleRec(bounds, background_color_variable);                // 화면에 짙은 회색 직사각형 그리기
         drawBackground(texture,ob->moveSpeed);                              // 지면 텍스쳐 그리기
 
         /** game entity option */
@@ -65,11 +69,27 @@ int main(void) {
         p->show(p);                                                         // 플레이어 출력
         
         /** display score */
-        int tmp = ob->timePass;
+        int score = ob->timePass;
         for(int i = 0; i < 5; i++) {                                        // 자릿수 별로 숫자 출력
-            digits[i] = tmp % 10;
-            tmp /= 10;
+            digits[i] = score % 10;
+            score /= 10;
             drawNumberAt(texture ,digitsPosition[i],digits[i]);
+        }
+
+        /** day cycle(1-cycle: day(600) + night(400)) */
+        int dayCycle = ob->timePass % 1000;
+        if(dayCycle == 600) {
+            if(background_color_variable.r == 255) {    // -208, each 13p 16 times
+                background_color_variable.r = 47;
+                background_color_variable.g = 47;
+                background_color_variable.b = 47;
+            }
+        } else if (dayCycle == 0) {
+            if(background_color_variable.r == 47) {     // +208
+                background_color_variable.r = 255;
+                background_color_variable.g = 255;
+                background_color_variable.b = 255;
+            }
         }
 
         /** best record display option */
@@ -81,7 +101,7 @@ int main(void) {
 
         /** game event option */
         Obstacle *temp = obstacleClosest(ob,p);                             // 가장 가까운 장애물 반환
-        if(temp != NULL)                                                    // 장애물과 충돌 시 게임오버
+        if(temp != NULL && spawnObstacle)                                   // 장애물과 충돌 시 게임오버
             if(CheckCollisionRecs(temp->aabb, p->aabb))
                 isGameOver = true;
 
