@@ -11,6 +11,8 @@ bool isReady        = false;                                                // �
 bool isStart        = false;                                                // 게임 재시작 플래그
 bool displayRecord  = false;                                                // 최고 기록 표시
 bool spawnObstacle  = false;                                                // 장애물 충돌 여부 플래그
+bool isDay          = true;
+bool isNight        = false;
 
 /** display score material */
 int bestRecord;                                                             // 최고 기록 저장
@@ -29,9 +31,8 @@ const Vector2 digitsPosition[10] = {                                        // �
     {.x = SCREEN_WIDTH * 0.6f + 27, .y = 40},   // HI  1000
     {.x = SCREEN_WIDTH * 0.6f +  3, .y = 40},   // HI 10000
 };
-
-int background_color_temp = 13;
-Color background_color_variable = { 255, 255, 255, 255 };
+int background_color_temp = 4;                                             // 배경화면 시간대 전환 RGB temp
+Color background_color_variable = { 255, 255, 255, 255 };                   // 배경화면 색상 - 가변
 
 int main(void) {
 
@@ -77,18 +78,28 @@ int main(void) {
         }
 
         /** day cycle(1-cycle: day(600) + night(400)) */
-        int dayCycle = ob->timePass % 1000;
-        if(dayCycle == 600) {
-            if(background_color_variable.r == 255) {    // -208, each 13p 16 times
-                background_color_variable.r = 47;
-                background_color_variable.g = 47;
-                background_color_variable.b = 47;
+        if(isDay) {
+            if(background_color_variable.r != 255) {
+                background_color_variable.r += background_color_temp;
+                background_color_variable.g += background_color_temp;
+                background_color_variable.b += background_color_temp;
             }
-        } else if (dayCycle == 0) {
+        } else if(isNight) {
+            if(background_color_variable.r != 47) {
+                background_color_variable.r -= background_color_temp;
+                background_color_variable.g -= background_color_temp;
+                background_color_variable.b -= background_color_temp;
+            }
+        }
+        if((ob->timePass % 1000) == 600) {
+            if(background_color_variable.r == 255) {    // -208, each 13p, 16 times
+                isNight = true;
+                isDay = false;
+            }
+        } else if ((ob->timePass % 1000) == 0) {
             if(background_color_variable.r == 47) {     // +208
-                background_color_variable.r = 255;
-                background_color_variable.g = 255;
-                background_color_variable.b = 255;
+                isDay = true;
+                isNight = false;
             }
         }
 
